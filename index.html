@@ -6198,12 +6198,12 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            created_at: new Date().toISOString(),
-                            agent: 'web-client',
                             uuid: crypto.randomUUID(),
+                            agent: 'web-client',
+                            target: 'swtContent',
                             payload: content,
                             operator: 'content',
-                            target: 'swtContent'
+                            created_at: Date.now()
                         })
                     });
                     if (!res.ok) throw new Error('Failed to save content');
@@ -6234,12 +6234,12 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            created_at: new Date().toISOString(),
-                            agent: 'web-client',
                             uuid: crypto.randomUUID(),
+                            agent: 'web-client',
+                            target: 'swtContent',
                             payload: siteData,
                             operator: 'siteData',
-                            target: 'swtContent'
+                            created_at: Date.now()
                         })
                     });
                     if (!res.ok) throw new Error('Failed to save site data');
@@ -6269,18 +6269,68 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            created_at: new Date().toISOString(),
-                            agent: 'web-client',
                             uuid: crypto.randomUUID(),
+                            agent: 'web-client',
+                            target: 'swtContent',
                             payload: theme,
                             operator: 'siteTheme',
-                            target: 'swtContent'
+                            created_at: Date.now()
                         })
                     });
                     if (!res.ok) throw new Error('Failed to save site theme');
                     return await res.json();
                 } catch (err) {
                     console.error('ContentAPI.saveSiteTheme error:', err);
+                    throw err;
+                }
+            },
+
+            // Send a single ALT event for a field change
+            async sendAltEvent(target, field, oldValue, newValue) {
+                try {
+                    const res = await fetch(`${this.baseUrl}/swtContent`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            uuid: crypto.randomUUID(),
+                            agent: 'web-client',
+                            target: target,
+                            payload: {
+                                field_changed: field,
+                                old_value: oldValue,
+                                new_value: newValue
+                            },
+                            operator: 'ALT',
+                            created_at: Date.now()
+                        })
+                    });
+                    if (!res.ok) throw new Error('Failed to send ALT event');
+                    return await res.json();
+                } catch (err) {
+                    console.error('ContentAPI.sendAltEvent error:', err);
+                    throw err;
+                }
+            },
+
+            // Send an INS event to seed initial data
+            async sendInsEvent(target, data) {
+                try {
+                    const res = await fetch(`${this.baseUrl}/swtContent`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            uuid: crypto.randomUUID(),
+                            agent: 'web-client',
+                            target: target,
+                            payload: data,
+                            operator: 'INS',
+                            created_at: Date.now()
+                        })
+                    });
+                    if (!res.ok) throw new Error('Failed to send INS event');
+                    return await res.json();
+                } catch (err) {
+                    console.error('ContentAPI.sendInsEvent error:', err);
                     throw err;
                 }
             },
@@ -6326,7 +6376,7 @@
                         payload = event.payload;
                     }
 
-                    const res = await fetch(`${this.baseUrl}/ingest_swt_content`, {
+                    const res = await fetch(`${this.baseUrl}/swtContent`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -6350,7 +6400,7 @@
             async saveSnapshot(frame, state, actor = 'system') {
                 try {
                     const snapshotId = `snap_${frame}_${Date.now()}`;
-                    const res = await fetch(`${this.baseUrl}/ingest_swt_content`, {
+                    const res = await fetch(`${this.baseUrl}/swtContent`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -6435,16 +6485,34 @@
 
                     // Set site data (merge with localStorage as fallback)
                     const localSiteData = JSON.parse(localStorage.getItem('siteData') || '{}');
-                    this.siteData = Object.keys(siteData).length > 0 ? siteData : localSiteData;
                     if (Object.keys(siteData).length > 0) {
+                        this.siteData = siteData;
                         localStorage.setItem('siteData', JSON.stringify(siteData));
+                    } else if (Object.keys(localSiteData).length > 0) {
+                        this.siteData = localSiteData;
+                    } else {
+                        // Seed defaults to API if nothing exists
+                        console.log('DB: Seeding default siteData to API...');
+                        const defaults = this.getDefaultSiteData();
+                        this.siteData = defaults;
+                        localStorage.setItem('siteData', JSON.stringify(defaults));
+                        await ContentAPI.sendInsEvent('siteData', defaults);
                     }
 
                     // Set site theme (merge with localStorage as fallback)
                     const localSiteTheme = JSON.parse(localStorage.getItem('siteTheme') || '{}');
-                    this.siteTheme = Object.keys(siteTheme).length > 0 ? siteTheme : localSiteTheme;
                     if (Object.keys(siteTheme).length > 0) {
+                        this.siteTheme = siteTheme;
                         localStorage.setItem('siteTheme', JSON.stringify(siteTheme));
+                    } else if (Object.keys(localSiteTheme).length > 0) {
+                        this.siteTheme = localSiteTheme;
+                    } else {
+                        // Seed defaults to API if nothing exists
+                        console.log('DB: Seeding default siteTheme to API...');
+                        const defaults = this.getDefaultSiteTheme();
+                        this.siteTheme = defaults;
+                        localStorage.setItem('siteTheme', JSON.stringify(defaults));
+                        await ContentAPI.sendInsEvent('siteTheme', defaults);
                     }
 
                     // Set events (use API data if available, otherwise use localStorage)
@@ -6523,13 +6591,36 @@
             },
 
             async setSiteData(data) {
+                const oldData = this.siteData || {};
+                const changedFields = [];
+
+                // Find changed fields by diffing
+                const allKeys = new Set([...Object.keys(oldData), ...Object.keys(data)]);
+                for (const key of allKeys) {
+                    const oldVal = oldData[key];
+                    const newVal = data[key];
+                    if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
+                        changedFields.push({ field: key, old_value: oldVal, new_value: newVal });
+                    }
+                }
+
+                // Update local state
                 this.siteData = data;
                 localStorage.setItem('siteData', JSON.stringify(data));
-                try {
-                    await ContentAPI.saveSiteData(data);
-                    Webhooks.log('site_data_update', { access_type: 'content' });
-                } catch (err) {
-                    console.error('DB: Error saving site data to API', err);
+
+                // Only send ALT events for changed fields
+                if (changedFields.length > 0) {
+                    try {
+                        for (const change of changedFields) {
+                            await ContentAPI.sendAltEvent('siteData', change.field, change.old_value, change.new_value);
+                        }
+                        Webhooks.log('site_data_update', { access_type: 'content', changes: changedFields.length });
+                        console.log(`DB: Sent ${changedFields.length} ALT events for siteData`);
+                    } catch (err) {
+                        console.error('DB: Error saving site data changes to API', err);
+                    }
+                } else {
+                    console.log('DB: No siteData changes to sync');
                 }
             },
 
@@ -6539,14 +6630,76 @@
             },
 
             async setSiteTheme(theme) {
+                const oldTheme = this.siteTheme || {};
+                const changedFields = [];
+
+                // Find changed fields by diffing
+                const allKeys = new Set([...Object.keys(oldTheme), ...Object.keys(theme)]);
+                for (const key of allKeys) {
+                    const oldVal = oldTheme[key];
+                    const newVal = theme[key];
+                    if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
+                        changedFields.push({ field: key, old_value: oldVal, new_value: newVal });
+                    }
+                }
+
+                // Update local state
                 this.siteTheme = theme;
                 localStorage.setItem('siteTheme', JSON.stringify(theme));
-                try {
-                    await ContentAPI.saveSiteTheme(theme);
-                    Webhooks.log('site_theme_update', { access_type: 'style' });
-                } catch (err) {
-                    console.error('DB: Error saving site theme to API', err);
+
+                // Only send ALT events for changed fields
+                if (changedFields.length > 0) {
+                    try {
+                        for (const change of changedFields) {
+                            await ContentAPI.sendAltEvent('siteTheme', change.field, change.old_value, change.new_value);
+                        }
+                        Webhooks.log('site_theme_update', { access_type: 'style', changes: changedFields.length });
+                        console.log(`DB: Sent ${changedFields.length} ALT events for siteTheme`);
+                    } catch (err) {
+                        console.error('DB: Error saving site theme changes to API', err);
+                    }
+                } else {
+                    console.log('DB: No siteTheme changes to sync');
                 }
+            },
+
+            // Default site data - used for initial seeding
+            getDefaultSiteData() {
+                return {
+                    siteName: 'Stand With Tennessee',
+                    heroTitle: 'Tennessee is under occupation by federal agents from ICE and CBP, and we need your support.',
+                    heroDescription: 'Across Tennessee, ICE continues to stop, harass, and detain people regardless of their citizenship status.',
+                    donateUrl: '#',
+                    donateText: 'Donate',
+                    featuredButton1Text: 'Featured GoFundMe',
+                    featuredButton1Url: '#',
+                    heroButton2Text: 'Mutual Aid',
+                    heroButton3Text: 'Organizations',
+                    navItem1Text: 'Mutual Aid',
+                    navItem2Text: 'Crowdfunding',
+                    navItem3Text: 'Organizations',
+                    navItem4Text: 'Connect',
+                    mutualAidTitle: 'Mutual Aid & Materials',
+                    mutualAidDescription: 'These funds are administered by neighbors helping their neighbors.',
+                    crowdfundingTitle: 'Crowdfunding Campaigns',
+                    crowdfundingDescription: 'Active campaigns that need support. Updated regularly.',
+                    orgsTitle: 'Organizations On The Ground',
+                    orgsDescription: 'Organizations doing direct service, jail support, and legal defense work.',
+                    secureMessagingTitle: 'Stay Connected Securely',
+                    secureMessagingDescription: 'In times of uncertainty, secure communication is essential.',
+                    contactEmail: 'contact@standwithtennessee.org'
+                };
+            },
+
+            // Default site theme - used for initial seeding
+            getDefaultSiteTheme() {
+                return {
+                    primaryColor: '#1a365d',
+                    secondaryColor: '#2d3748',
+                    accentColor: '#ed8936',
+                    backgroundColor: '#ffffff',
+                    textColor: '#1a202c'
+                };
             },
 
             generateId(prefix) {
