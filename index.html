@@ -6752,25 +6752,22 @@
                 };
             },
 
-            generateId(prefix) {
-                // Events need proper UUIDs for Xano API
-                if (prefix === 'evt') {
-                    return crypto.randomUUID();
-                }
-                // Other records (org, cam, etc.) can use custom format
-                return `${prefix}_${Math.random().toString(36).substr(2, 8)}`;
+            generateId() {
+                // Always use proper UUIDs for all records
+                return crypto.randomUUID();
             },
 
-            createEvent(eventType, operator, frame, recordId, payload, actor = 'admin') {
+            createEvent(eventType, operator, frame, recordId, payload, actor = 'admin', set = null) {
                 this.ordinal++;
                 const event = {
-                    id: this.generateId('evt'),
+                    id: this.generateId(),
                     ordinal: this.ordinal,
                     created_at: new Date().toISOString(),
                     event_type: eventType,
                     operator: operator,
                     frame: frame,
                     record_id: recordId,
+                    set: set || frame, // Target type being transformed (e.g., 'site_config', 'organizations')
                     actor: actor,
                     payload: payload
                 };
@@ -6781,26 +6778,25 @@
             },
 
             // INS - Instance/Create
-            insRecord(frame, fields, recordId = null, actor = 'admin') {
+            insRecord(frame, fields, recordId = null, actor = 'admin', set = null) {
                 if (!recordId) {
-                    const prefix = frame.endsWith('s') ? frame.slice(0, -1).slice(0, 3) : frame.slice(0, 3);
-                    recordId = this.generateId(prefix);
+                    recordId = this.generateId();
                 }
                 const payload = { INS: { id: recordId, fields: fields } };
-                return this.createEvent('given', 'INS', frame, recordId, payload, actor);
+                return this.createEvent('given', 'INS', frame, recordId, payload, actor, set);
             },
 
             // ALT - Alter/Update
-            altRecord(frame, recordId, field, oldValue, newValue, actor = 'admin') {
+            altRecord(frame, recordId, field, oldValue, newValue, actor = 'admin', set = null) {
                 const payload = { ALT: { field: field, old_value: oldValue, new_value: newValue } };
-                return this.createEvent('given', 'ALT', frame, recordId, payload, actor);
+                return this.createEvent('given', 'ALT', frame, recordId, payload, actor, set);
             },
 
             // NUL - Archive/Delete
-            nulRecord(frame, recordId, reason, actor = 'admin') {
+            nulRecord(frame, recordId, reason, actor = 'admin', set = null) {
                 const currentState = this.getCurrentState(recordId, frame);
                 const payload = { NUL: { reason: reason, snapshot: currentState } };
-                return this.createEvent('meant', 'NUL', frame, recordId, payload, actor);
+                return this.createEvent('meant', 'NUL', frame, recordId, payload, actor, set);
             },
 
             // Get events for a specific record
