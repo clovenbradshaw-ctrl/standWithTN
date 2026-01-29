@@ -5050,12 +5050,28 @@
             },
 
             // Ingest endpoint for event-sourced content
-            // Schema: { id, created_at, agent, uuid, payload, operator, target, set }
-            // - set: the frame/context (organizations, campaigns, snapshots, etc.)
-            // - target: what's being acted upon (record_id for activities, frame name for snapshots)
-            // - operator: INS, ALT, NUL for activities; INS for snapshots
+            // Schema: { uuid, agent, target, payload, operator, created_at }
             async ingestContent(event) {
                 try {
+                    // Flatten payload based on operator type
+                    let payload;
+                    if (event.operator === 'INS' && event.payload.INS) {
+                        payload = { id: event.payload.INS.id, ...event.payload.INS.fields };
+                    } else if (event.operator === 'ALT' && event.payload.ALT) {
+                        payload = {
+                            field_changed: event.payload.ALT.field,
+                            old_value: event.payload.ALT.old_value,
+                            new_value: event.payload.ALT.new_value
+                        };
+                    } else if (event.operator === 'NUL' && event.payload.NUL) {
+                        payload = {
+                            reason: event.payload.NUL.reason,
+                            snapshot: event.payload.NUL.snapshot
+                        };
+                    } else {
+                        payload = event.payload;
+                    }
+
                     const res = await fetch(`${this.baseUrl}/ingest_swt_content`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -5063,16 +5079,9 @@
                             uuid: event.id,
                             agent: event.actor || 'admin',
                             target: event.record_id,
-                            set: event.frame,
-                            payload: {
-                                data: event.payload,
-                                frame: event.frame,
-                                ordinal: event.ordinal,
-                                record_id: event.record_id,
-                                event_type: event.event_type
-                            },
+                            payload: payload,
                             operator: event.operator,
-                            created_at: event.created_at
+                            created_at: new Date(event.created_at).getTime()
                         })
                     });
                     if (!res.ok) throw new Error('Failed to ingest content');
@@ -5083,8 +5092,7 @@
                 }
             },
 
-            // Save a snapshot - creates an INS record in the "snapshots" set
-            // Snapshots represent the computed current state for fast hydration on load
+            // Save a snapshot - creates an INS record for a frame's current state
             async saveSnapshot(frame, state, actor = 'system') {
                 try {
                     const snapshotId = `snap_${frame}_${Date.now()}`;
@@ -5094,16 +5102,10 @@
                         body: JSON.stringify({
                             uuid: snapshotId,
                             agent: actor,
-                            target: frame,  // What this snapshot represents (e.g., "organizations")
-                            set: 'snapshots',
-                            payload: {
-                                data: state,  // The full computed state
-                                frame: frame,
-                                record_count: Array.isArray(state) ? state.length : 1,
-                                computed_at: new Date().toISOString()
-                            },
+                            target: frame,
+                            payload: state,
                             operator: 'INS',
-                            created_at: new Date().toISOString()
+                            created_at: Date.now()
                         })
                     });
                     if (!res.ok) throw new Error('Failed to save snapshot');
