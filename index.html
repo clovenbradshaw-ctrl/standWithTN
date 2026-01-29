@@ -1427,6 +1427,59 @@
             font-size: 0.85rem;
         }
 
+        /* Nav Dropdown */
+        .ce-preview-content .preview-header .nav .nav-dropdown {
+            position: relative;
+        }
+
+        .ce-preview-content .preview-header .nav .nav-dropdown > a {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .ce-preview-content .preview-header .nav .nav-dropdown > a::after {
+            content: '▾';
+            font-size: 10px;
+            opacity: 0.6;
+        }
+
+        .ce-preview-content .preview-header .nav .nav-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 180px;
+            padding: 8px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s;
+            z-index: 100;
+        }
+
+        .ce-preview-content .preview-header .nav .nav-dropdown:hover .nav-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .ce-preview-content .preview-header .nav .nav-dropdown-menu a {
+            display: block;
+            padding: 8px 16px;
+            color: var(--gray-700);
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .ce-preview-content .preview-header .nav .nav-dropdown-menu a:hover {
+            background: var(--gray-50);
+            color: var(--theme-accent);
+        }
+
         /* CMS Panel (Right Side) */
         .ce-cms-panel {
             width: 480px;
@@ -1709,6 +1762,267 @@
 
         .ce-block-content {
             padding: 12px;
+        }
+
+        /* Navigation Manager */
+        .nav-manager {
+            padding: 16px;
+        }
+
+        .nav-manager-header {
+            margin-bottom: 16px;
+        }
+
+        .nav-manager-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+
+        .nav-manager-header p {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin: 0;
+        }
+
+        .nav-manager-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .nav-pages-list {
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            background: white;
+            min-height: 200px;
+        }
+
+        .nav-page-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-100);
+            background: white;
+            transition: all 0.15s;
+            cursor: move;
+        }
+
+        .nav-page-item:last-child {
+            border-bottom: none;
+        }
+
+        .nav-page-item:hover {
+            background: var(--gray-50);
+        }
+
+        .nav-page-item.dragging {
+            opacity: 0.5;
+            background: var(--orange-light, #fff7ed);
+        }
+
+        .nav-page-item.drag-over {
+            border-top: 2px solid var(--orange);
+        }
+
+        .nav-page-item.nested-1 {
+            padding-left: 40px;
+        }
+
+        .nav-page-item.nested-2 {
+            padding-left: 64px;
+        }
+
+        .nav-page-item.nested-1::before,
+        .nav-page-item.nested-2::before {
+            content: '↳';
+            position: absolute;
+            left: 20px;
+            color: var(--gray-400);
+        }
+
+        .nav-page-item.nested-1 { position: relative; }
+        .nav-page-item.nested-2 { position: relative; }
+        .nav-page-item.nested-2::before { left: 44px; }
+
+        .nav-page-drag-handle {
+            color: var(--gray-400);
+            margin-right: 12px;
+            cursor: move;
+            font-size: 14px;
+        }
+
+        .nav-page-visibility {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .nav-page-visibility:hover {
+            background: var(--gray-100);
+        }
+
+        .nav-page-visibility.hidden {
+            opacity: 0.4;
+        }
+
+        .nav-page-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .nav-page-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-800);
+            margin: 0 0 2px 0;
+        }
+
+        .nav-page-title input {
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-800);
+            padding: 0;
+            width: 100%;
+        }
+
+        .nav-page-title input:focus {
+            outline: none;
+            background: var(--gray-100);
+            padding: 2px 6px;
+            margin: -2px -6px;
+            border-radius: 4px;
+        }
+
+        .nav-page-url {
+            font-size: 11px;
+            color: var(--gray-500);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-page-type {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            margin-right: 8px;
+        }
+
+        .nav-page-type.external {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .nav-page-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .nav-page-item:hover .nav-page-actions {
+            opacity: 1;
+        }
+
+        .nav-page-action-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .nav-page-action-btn:hover {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .nav-page-action-btn.delete:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .nav-page-action-btn.indent:hover {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .nav-manager-footer {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .nav-legend {
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        .nav-legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--gray-500);
+        }
+
+        .nav-empty-state p {
+            margin: 0 0 16px 0;
+        }
+
+        /* Nav item edit modal */
+        .nav-edit-inline {
+            background: var(--gray-50);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        .nav-edit-inline input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--gray-200);
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .nav-edit-inline input:focus {
+            outline: none;
+            border-color: var(--orange);
+        }
+
+        .nav-edit-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
         }
 
         /* Form elements for CE */
@@ -4172,6 +4486,7 @@
 
                 <div class="ce-cms-tabs">
                     <button class="ce-cms-tab active" onclick="showCeCmsTab('content')">Content</button>
+                    <button class="ce-cms-tab" onclick="showCeCmsTab('navigation')">Navigation</button>
                     <button class="ce-cms-tab" onclick="showCeCmsTab('style')">Style</button>
                     <button class="ce-cms-tab" onclick="showCeCmsTab('blocks')">Blocks</button>
                     <button class="ce-cms-tab" onclick="showCeCmsTab('settings')">Settings</button>
@@ -4187,6 +4502,29 @@
 
                         <div id="ce-content-table-area">
                             <!-- Selected content type table rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Navigation Tab -->
+                    <div id="ce-tab-navigation" class="ce-cms-section">
+                        <div class="nav-manager">
+                            <div class="nav-manager-header">
+                                <h3>🧭 Navigation</h3>
+                                <p>Drag to reorder. Indent items to create dropdowns.</p>
+                            </div>
+                            <div class="nav-manager-toolbar">
+                                <button class="btn btn-primary btn-sm" onclick="navAddPage()">+ Add Page</button>
+                                <button class="btn btn-sm" onclick="navAddExternal()">+ External Link</button>
+                            </div>
+                            <div class="nav-pages-list" id="nav-pages-list">
+                                <!-- Nav items rendered here -->
+                            </div>
+                            <div class="nav-manager-footer">
+                                <div class="nav-legend">
+                                    <span><span class="nav-icon-visible">👁</span> Visible in nav</span>
+                                    <span><span class="nav-icon-hidden">👁‍🗨</span> Hidden</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -7265,6 +7603,21 @@
                     { name: 'url', label: 'URL (for buttons/links)', type: 'url' }
                 ],
                 tableColumns: ['title', 'block_type', 'order']
+            },
+            nav_items: {
+                name: 'Navigation Items',
+                description: 'Site navigation structure',
+                icon: '🧭',
+                fields: [
+                    { name: 'title', label: 'Title', type: 'text', required: true },
+                    { name: 'url', label: 'URL/Anchor', type: 'text' },
+                    { name: 'link_type', label: 'Type', type: 'select', options: ['section', 'page', 'external'] },
+                    { name: 'parent_id', label: 'Parent', type: 'relation', relation: 'nav_items' },
+                    { name: 'order', label: 'Order', type: 'number' },
+                    { name: 'visible', label: 'Visible in Nav', type: 'checkbox' },
+                    { name: 'open_new_tab', label: 'Open in New Tab', type: 'checkbox' }
+                ],
+                tableColumns: ['title', 'link_type', 'visible']
             }
         };
 
@@ -8336,6 +8689,308 @@
             }
         });
 
+        // ============================================
+        // NAVIGATION MANAGER
+        // ============================================
+
+        // Default nav items (seeded on first load)
+        const defaultNavItems = [
+            { id: 'nav_mutualaid', title: 'Mutual Aid', url: '#mutualaid', link_type: 'section', order: 1, visible: true, parent_id: null },
+            { id: 'nav_crowdfunding', title: 'Crowdfunding', url: '#crowdfunding', link_type: 'section', order: 2, visible: true, parent_id: null },
+            { id: 'nav_orgs', title: 'Organizations', url: '#orgs', link_type: 'section', order: 3, visible: true, parent_id: null },
+            { id: 'nav_connect', title: 'Connect', url: '#secure-messaging', link_type: 'section', order: 4, visible: true, parent_id: null },
+            { id: 'nav_donate', title: 'Donate', url: '#', link_type: 'external', order: 5, visible: true, parent_id: null, is_cta: true }
+        ];
+
+        // Initialize default nav items if none exist
+        function navInitDefaults() {
+            const existing = DB.getAllCurrentStates('nav_items');
+            if (existing.length === 0) {
+                defaultNavItems.forEach(item => {
+                    DB.insRecord('nav_items', item, item.id);
+                });
+            }
+        }
+
+        // Get nav items sorted by order, with children grouped under parents
+        function navGetItems() {
+            const items = DB.getAllCurrentStates('nav_items').sort((a, b) => (a.order || 0) - (b.order || 0));
+            return items;
+        }
+
+        // Get hierarchical nav structure
+        function navGetHierarchy() {
+            const items = navGetItems();
+            const topLevel = items.filter(i => !i.parent_id);
+            return topLevel.map(parent => ({
+                ...parent,
+                children: items.filter(i => i.parent_id === parent.id).sort((a, b) => (a.order || 0) - (b.order || 0))
+            }));
+        }
+
+        // Render nav manager list
+        function navRenderList() {
+            const container = document.getElementById('nav-pages-list');
+            if (!container) return;
+
+            const items = navGetItems();
+
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="nav-empty-state">
+                        <p>No navigation items yet</p>
+                        <button class="btn btn-primary btn-sm" onclick="navAddPage()">+ Add First Page</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Build hierarchical display
+            const topLevel = items.filter(i => !i.parent_id);
+            let html = '';
+
+            topLevel.forEach(item => {
+                html += navRenderItem(item, 0);
+                // Render children
+                const children = items.filter(i => i.parent_id === item.id);
+                children.forEach(child => {
+                    html += navRenderItem(child, 1);
+                    // Render grandchildren
+                    const grandchildren = items.filter(i => i.parent_id === child.id);
+                    grandchildren.forEach(gc => {
+                        html += navRenderItem(gc, 2);
+                    });
+                });
+            });
+
+            container.innerHTML = html;
+            navInitDragDrop();
+        }
+
+        // Render single nav item
+        function navRenderItem(item, nestLevel = 0) {
+            const typeLabels = { section: 'Section', page: 'Page', external: 'Link' };
+            const nestClass = nestLevel > 0 ? `nested-${nestLevel}` : '';
+
+            return `
+                <div class="nav-page-item ${nestClass}" draggable="true" data-nav-id="${item.id}" data-order="${item.order || 0}" data-parent="${item.parent_id || ''}">
+                    <span class="nav-page-drag-handle">⋮⋮</span>
+                    <button class="nav-page-visibility ${item.visible ? '' : 'hidden'}" onclick="navToggleVisibility('${item.id}')" title="${item.visible ? 'Hide from nav' : 'Show in nav'}">
+                        ${item.visible ? '👁' : '👁‍🗨'}
+                    </button>
+                    <div class="nav-page-info">
+                        <div class="nav-page-title">
+                            <input type="text" value="${escapeHtml(item.title)}" onblur="navUpdateTitle('${item.id}', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+                        </div>
+                        <div class="nav-page-url">${escapeHtml(item.url || '')}</div>
+                    </div>
+                    <span class="nav-page-type ${item.link_type === 'external' ? 'external' : ''}">${typeLabels[item.link_type] || 'Link'}</span>
+                    <div class="nav-page-actions">
+                        ${nestLevel < 2 ? `<button class="nav-page-action-btn indent" onclick="navIndent('${item.id}')" title="Make sub-item">→</button>` : ''}
+                        ${nestLevel > 0 ? `<button class="nav-page-action-btn indent" onclick="navOutdent('${item.id}')" title="Move up level">←</button>` : ''}
+                        <button class="nav-page-action-btn" onclick="navEditItem('${item.id}')" title="Edit">✏️</button>
+                        <button class="nav-page-action-btn delete" onclick="navDeleteItem('${item.id}')" title="Delete">🗑</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add new page/section
+        function navAddPage() {
+            const items = navGetItems();
+            const maxOrder = Math.max(0, ...items.map(i => i.order || 0));
+
+            const newItem = {
+                title: 'New Page',
+                url: '#new-page',
+                link_type: 'section',
+                order: maxOrder + 1,
+                visible: true,
+                parent_id: null
+            };
+
+            DB.insRecord('nav_items', newItem);
+            navRenderList();
+            ceRenderPreview();
+            ceShowToast('Page added', 'success');
+        }
+
+        // Add external link
+        function navAddExternal() {
+            const items = navGetItems();
+            const maxOrder = Math.max(0, ...items.map(i => i.order || 0));
+
+            const url = prompt('Enter external URL:', 'https://');
+            if (!url) return;
+
+            const title = prompt('Enter link title:', 'External Link');
+            if (!title) return;
+
+            const newItem = {
+                title: title,
+                url: url,
+                link_type: 'external',
+                order: maxOrder + 1,
+                visible: true,
+                parent_id: null,
+                open_new_tab: true
+            };
+
+            DB.insRecord('nav_items', newItem);
+            navRenderList();
+            ceRenderPreview();
+            ceShowToast('External link added', 'success');
+        }
+
+        // Toggle visibility
+        function navToggleVisibility(id) {
+            const item = DB.getCurrentState(id, 'nav_items');
+            if (!item) return;
+
+            DB.altRecord('nav_items', id, 'visible', item.visible, !item.visible);
+            navRenderList();
+            ceRenderPreview();
+        }
+
+        // Update title
+        function navUpdateTitle(id, newTitle) {
+            const item = DB.getCurrentState(id, 'nav_items');
+            if (!item || item.title === newTitle) return;
+
+            DB.altRecord('nav_items', id, 'title', item.title, newTitle);
+            ceRenderPreview();
+        }
+
+        // Indent item (make it child of previous sibling)
+        function navIndent(id) {
+            const items = navGetItems();
+            const item = items.find(i => i.id === id);
+            if (!item) return;
+
+            // Find previous sibling at same level
+            const siblings = items.filter(i => i.parent_id === item.parent_id && i.order < item.order);
+            if (siblings.length === 0) return;
+
+            const newParent = siblings[siblings.length - 1];
+            DB.altRecord('nav_items', id, 'parent_id', item.parent_id, newParent.id);
+
+            navRenderList();
+            ceRenderPreview();
+            ceShowToast('Item indented', 'success');
+        }
+
+        // Outdent item (move up one level)
+        function navOutdent(id) {
+            const item = DB.getCurrentState(id, 'nav_items');
+            if (!item || !item.parent_id) return;
+
+            const parent = DB.getCurrentState(item.parent_id, 'nav_items');
+            const newParentId = parent ? parent.parent_id : null;
+
+            DB.altRecord('nav_items', id, 'parent_id', item.parent_id, newParentId);
+
+            navRenderList();
+            ceRenderPreview();
+            ceShowToast('Item outdented', 'success');
+        }
+
+        // Edit item (open modal)
+        function navEditItem(id) {
+            ceOpenEditModal('nav_items', id);
+        }
+
+        // Delete item
+        function navDeleteItem(id) {
+            if (!confirm('Delete this navigation item?')) return;
+
+            // Also delete children
+            const items = navGetItems();
+            const children = items.filter(i => i.parent_id === id);
+            children.forEach(child => {
+                const grandchildren = items.filter(i => i.parent_id === child.id);
+                grandchildren.forEach(gc => DB.nulRecord('nav_items', gc.id, 'Deleted with parent'));
+                DB.nulRecord('nav_items', child.id, 'Deleted with parent');
+            });
+
+            DB.nulRecord('nav_items', id, 'User deleted');
+            navRenderList();
+            ceRenderPreview();
+            ceShowToast('Item deleted', 'success');
+        }
+
+        // Drag and drop for nav items
+        function navInitDragDrop() {
+            const container = document.getElementById('nav-pages-list');
+            if (!container) return;
+
+            const items = container.querySelectorAll('.nav-page-item');
+            let draggedEl = null;
+
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    draggedEl = item;
+                    item.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                    items.forEach(i => i.classList.remove('drag-over'));
+
+                    // Update order based on new positions
+                    const newOrder = Array.from(container.querySelectorAll('.nav-page-item')).map((el, idx) => ({
+                        id: el.dataset.navId,
+                        order: idx + 1
+                    }));
+
+                    newOrder.forEach(({ id, order }) => {
+                        const current = DB.getCurrentState(id, 'nav_items');
+                        if (current && current.order !== order) {
+                            DB.altRecord('nav_items', id, 'order', current.order, order);
+                        }
+                    });
+
+                    ceRenderPreview();
+                });
+
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+
+                    if (item !== draggedEl) {
+                        item.classList.add('drag-over');
+                    }
+                });
+
+                item.addEventListener('dragleave', () => {
+                    item.classList.remove('drag-over');
+                });
+
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    item.classList.remove('drag-over');
+
+                    if (item !== draggedEl && draggedEl) {
+                        // Insert dragged element before or after this item
+                        const rect = item.getBoundingClientRect();
+                        const midY = rect.top + rect.height / 2;
+
+                        if (e.clientY < midY) {
+                            item.parentNode.insertBefore(draggedEl, item);
+                        } else {
+                            item.parentNode.insertBefore(draggedEl, item.nextSibling);
+                        }
+                    }
+                });
+            });
+        }
+
+        // Load nav manager when tab shown
+        function navLoadManager() {
+            navInitDefaults();
+            navRenderList();
+        }
+
         function ceRenderPreview(useLiveFormValues = false) {
             const container = document.getElementById('ce-preview-content');
             // Use form values for live preview, DB.getSiteData() for saved state from API
@@ -8360,16 +9015,40 @@
 
             const mutualAidOrgs = orgs.filter(o => o.organization_type === 'mutual_aid');
 
+            // Get navigation items
+            const navItems = navGetHierarchy().filter(i => i.visible);
+
+            // Render nav item with optional dropdown
+            function renderNavItem(item) {
+                const hasChildren = item.children && item.children.filter(c => c.visible).length > 0;
+                const isExternal = item.link_type === 'external';
+                const isCta = item.is_cta;
+                const target = isExternal || item.open_new_tab ? ' target="_blank"' : '';
+                const ctaClass = isCta ? ' class="public-btn"' : '';
+
+                if (hasChildren) {
+                    const visibleChildren = item.children.filter(c => c.visible);
+                    return `
+                        <div class="nav-dropdown" data-nav-item="${item.id}">
+                            <a href="${escapeHtml(item.url || '#')}"${target}${ctaClass}>${escapeHtml(item.title)}</a>
+                            <div class="nav-dropdown-menu">
+                                ${visibleChildren.map(child => `
+                                    <a href="${escapeHtml(child.url || '#')}"${child.open_new_tab ? ' target="_blank"' : ''}>${escapeHtml(child.title)}</a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                return `<a href="${escapeHtml(item.url || '#')}"${target}${ctaClass} data-nav-item="${item.id}">${escapeHtml(item.title)}</a>`;
+            }
+
             container.innerHTML = `
                 <!-- Header/Navigation -->
                 <header class="preview-header" data-block-id="header" data-section-name="Header">
                     <a href="#" class="logo" data-inline-edit="siteName" data-inline-type="text">${escapeHtml(siteData.siteName || 'Stand With Tennessee')}</a>
                     <nav class="nav">
-                        <a href="#mutualaid" data-inline-edit="navItem1Text" data-inline-type="text">${escapeHtml(siteData.navItem1Text || 'Mutual Aid')}</a>
-                        <a href="#crowdfunding" data-inline-edit="navItem2Text" data-inline-type="text">${escapeHtml(siteData.navItem2Text || 'Crowdfunding')}</a>
-                        <a href="#orgs" data-inline-edit="navItem3Text" data-inline-type="text">${escapeHtml(siteData.navItem3Text || 'Organizations')}</a>
-                        <a href="#secure-messaging" data-inline-edit="navItem4Text" data-inline-type="text">${escapeHtml(siteData.navItem4Text || 'Connect')}</a>
-                        <a href="${escapeHtml(siteData.donateUrl || '#')}" class="public-btn" data-inline-edit="donate" data-inline-type="button" data-inline-text="${escapeHtml(siteData.donateText || 'Donate')}" data-inline-url="${escapeHtml(siteData.donateUrl || '#')}">${escapeHtml(siteData.donateText || 'Donate')}</a>
+                        ${navItems.map(item => renderNavItem(item)).join('')}
                     </nav>
                 </header>
 
@@ -8611,6 +9290,10 @@
             // Load style manager when style tab is shown
             if (tabId === 'style') {
                 smLoadTheme();
+            }
+            // Load navigation manager when navigation tab is shown
+            if (tabId === 'navigation') {
+                navLoadManager();
             }
         };
 
