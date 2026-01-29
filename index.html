@@ -7089,6 +7089,11 @@
             isInitialized: false,
             _stateCache: {}, // Memoization cache for getAllCurrentStates
 
+            // Snapshot auto-trigger system
+            _inactivityTimer: null,
+            _inactivityTimeout: 5 * 60 * 1000, // 5 minutes in milliseconds
+            _hasUnsyncedActivity: false, // Track if there's activity since last snapshot
+
             // Initialize from API - call this on page load
             async initialize() {
                 if (this.isInitialized) return;
@@ -7350,6 +7355,10 @@
                 this.events.push(event);
                 this._invalidateCache(frame); // Clear memoization cache for this frame
                 this.save();
+
+                // Mark activity for automatic snapshot creation
+                this.markActivity();
+
                 return event;
             },
 
@@ -7612,7 +7621,97 @@
             // Trigger a snapshot on save (called after bulk saves)
             async triggerSaveSnapshot(actor = 'admin') {
                 console.log('DB: Triggering snapshot after save...');
-                return this.createSnapshot(actor);
+                const result = await this.createSnapshot(actor);
+                // Reset activity flag since we just captured the state
+                this._hasUnsyncedActivity = false;
+                // Clear the inactivity timer since we just saved
+                if (this._inactivityTimer) {
+                    clearTimeout(this._inactivityTimer);
+                    this._inactivityTimer = null;
+                }
+                return result;
+            },
+
+            // Reset the inactivity timer (called on every activity)
+            resetInactivityTimer() {
+                // Clear existing timer
+                if (this._inactivityTimer) {
+                    clearTimeout(this._inactivityTimer);
+                }
+
+                // Only set timer if there's been activity
+                if (!this._hasUnsyncedActivity) return;
+
+                // Set new timer for 5 minutes
+                this._inactivityTimer = setTimeout(async () => {
+                    if (this._hasUnsyncedActivity) {
+                        console.log('DB: Inactivity timeout reached, creating snapshot...');
+                        try {
+                            await this.createSnapshot('inactivity-timeout');
+                            this._hasUnsyncedActivity = false;
+                        } catch (err) {
+                            console.error('DB: Failed to create inactivity snapshot', err);
+                        }
+                    }
+                }, this._inactivityTimeout);
+
+                console.log('DB: Inactivity timer reset (5 min)');
+            },
+
+            // Start the inactivity timer system
+            startInactivityTracking() {
+                console.log('DB: Starting inactivity tracking for auto-snapshots');
+                // Initial timer start if there's existing unsynced activity
+                this.resetInactivityTimer();
+            },
+
+            // Mark that activity has occurred (called from createEvent)
+            markActivity() {
+                this._hasUnsyncedActivity = true;
+                this.resetInactivityTimer();
+            },
+
+            // Handle session end (beforeunload) - create final snapshot
+            handleSessionEnd() {
+                // Skip if not initialized or no activity to save
+                if (!this.isInitialized || !this._hasUnsyncedActivity) {
+                    return;
+                }
+
+                console.log('DB: Session end detected, creating final snapshot...');
+
+                // Use sendBeacon for reliable delivery on page unload
+                try {
+                    const snapshotData = this.computeFullSnapshot();
+                    const snapshotId = `snap_all_${Date.now()}`;
+
+                    const payload = {
+                        uuid: snapshotId,
+                        agent: 'session-end',
+                        target: 'all',
+                        set: 'snapshots',
+                        operator: 'INS',
+                        payload: snapshotData,
+                        created_at: Date.now()
+                    };
+
+                    // Try sendBeacon first (most reliable for page unload)
+                    const beaconSent = navigator.sendBeacon(
+                        `${ContentAPI.baseUrl}/swtContent`,
+                        JSON.stringify(payload)
+                    );
+
+                    if (beaconSent) {
+                        console.log('DB: Session-end snapshot sent via beacon');
+                        this._hasUnsyncedActivity = false;
+                    } else {
+                        // Fallback to regular fetch (may not complete on unload)
+                        await ContentAPI.saveFullSnapshot(snapshotData, 'session-end');
+                        this._hasUnsyncedActivity = false;
+                    }
+                } catch (err) {
+                    console.error('DB: Failed to create session-end snapshot', err);
+                }
             }
         };
 
@@ -9346,6 +9445,9 @@
                 // Check if a snapshot exists, if not create one from current states
                 await DB.ensureSnapshotExists();
 
+                // Start automatic snapshot system
+                DB.startInactivityTracking();
+
             } catch (err) {
                 console.warn('API initialization failed, attempting cache fallback:', err);
 
@@ -9359,11 +9461,22 @@
                 }
                 renderPublicSite();
                 console.log('Site rendered from cache due to API error');
+
+                // Still start snapshot tracking for cache fallback mode
+                DB.startInactivityTracking();
             } finally {
                 // Remove loading state
                 mainContent.style.opacity = '1';
                 mainContent.style.pointerEvents = 'auto';
             }
+        });
+
+        // Register session-end handlers globally (outside try/catch to ensure they're always registered)
+        window.addEventListener('beforeunload', () => {
+            DB.handleSessionEnd();
+        });
+        window.addEventListener('pagehide', () => {
+            DB.handleSessionEnd();
         });
 
         // ============================================
