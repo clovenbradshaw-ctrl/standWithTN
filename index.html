@@ -4771,30 +4771,37 @@
             },
 
             async saveSiteEvent(event) {
-                // Send a single event to the API
+                // Send a single event to the ingest endpoint
+                return this.ingestContent(event);
+            },
+
+            // Ingest endpoint for event-sourced content
+            async ingestContent(event) {
                 try {
-                    const res = await fetch(`${this.baseUrl}/swtContent`, {
+                    const res = await fetch(`${this.baseUrl}/ingest_swt_content`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            created_at: event.created_at,
-                            agent: event.actor || 'web-client',
                             uuid: event.id,
+                            agent: event.actor || 'admin',
+                            target: 'swtContent',
                             payload: {
+                                data: {
+                                    [event.operator]: event.payload
+                                },
                                 frame: event.frame,
-                                record_id: event.record_id,
                                 ordinal: event.ordinal,
-                                event_type: event.event_type,
-                                data: event.payload
+                                record_id: event.record_id,
+                                event_type: event.event_type
                             },
                             operator: event.operator,
-                            target: 'swtContent'
+                            created_at: event.created_at
                         })
                     });
-                    if (!res.ok) throw new Error('Failed to save site event');
+                    if (!res.ok) throw new Error('Failed to ingest content');
                     return await res.json();
                 } catch (err) {
-                    console.error('ContentAPI.saveSiteEvent error:', err);
+                    console.error('ContentAPI.ingestContent error:', err);
                     throw err;
                 }
             },
