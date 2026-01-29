@@ -5282,12 +5282,12 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            created_at: new Date().toISOString(),
-                            agent: 'web-client',
                             uuid: crypto.randomUUID(),
+                            agent: 'web-client',
+                            target: 'swtContent',
                             payload: content,
                             operator: 'content',
-                            target: 'swtContent'
+                            created_at: Date.now()
                         })
                     });
                     if (!res.ok) throw new Error('Failed to save content');
@@ -5318,12 +5318,12 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            created_at: new Date().toISOString(),
-                            agent: 'web-client',
                             uuid: crypto.randomUUID(),
+                            agent: 'web-client',
+                            target: 'swtContent',
                             payload: siteData,
                             operator: 'siteData',
-                            target: 'swtContent'
+                            created_at: Date.now()
                         })
                     });
                     if (!res.ok) throw new Error('Failed to save site data');
@@ -5353,12 +5353,12 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            created_at: new Date().toISOString(),
-                            agent: 'web-client',
                             uuid: crypto.randomUUID(),
+                            agent: 'web-client',
+                            target: 'swtContent',
                             payload: theme,
                             operator: 'siteTheme',
-                            target: 'swtContent'
+                            created_at: Date.now()
                         })
                     });
                     if (!res.ok) throw new Error('Failed to save site theme');
