@@ -6207,7 +6207,6 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            uuid: crypto.randomUUID(),
                             agent: 'web-client',
                             target: 'swtContent',
                             payload: content,
@@ -6243,7 +6242,6 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            uuid: crypto.randomUUID(),
                             agent: 'web-client',
                             target: 'swtContent',
                             payload: siteData,
@@ -6278,7 +6276,6 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            uuid: crypto.randomUUID(),
                             agent: 'web-client',
                             target: 'swtContent',
                             payload: theme,
@@ -6301,7 +6298,6 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            uuid: crypto.randomUUID(),
                             agent: 'web-client',
                             target: target,
                             payload: {
@@ -6328,7 +6324,6 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            uuid: crypto.randomUUID(),
                             agent: 'web-client',
                             target: target,
                             payload: data,
@@ -6363,7 +6358,7 @@
             },
 
             // Ingest endpoint for event-sourced content
-            // Schema: { uuid, agent, target, payload, operator, created_at }
+            // Schema: { agent, target, payload, operator, created_at }
             async ingestContent(event) {
                 try {
                     // Flatten payload based on operator type
@@ -6389,7 +6384,6 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            uuid: event.id,
                             agent: event.actor || 'admin',
                             target: event.record_id,
                             payload: payload,
@@ -6408,12 +6402,10 @@
             // Save a snapshot - creates an INS record for a frame's current state
             async saveSnapshot(frame, state, actor = 'system') {
                 try {
-                    const snapshotId = `snap_${frame}_${Date.now()}`;
                     const res = await fetch(`${this.baseUrl}/swtContent`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            uuid: snapshotId,
                             agent: actor,
                             target: frame,
                             payload: state,
@@ -6712,11 +6704,6 @@
             },
 
             generateId(prefix) {
-                // Events need proper UUIDs for Xano API
-                if (prefix === 'evt') {
-                    return crypto.randomUUID();
-                }
-                // Other records (org, cam, etc.) can use custom format
                 return `${prefix}_${Math.random().toString(36).substr(2, 8)}`;
             },
 
