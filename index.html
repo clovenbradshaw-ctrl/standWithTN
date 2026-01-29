@@ -6429,6 +6429,47 @@
                 }
             },
 
+            // Save a full state snapshot (all frames) - follows API docs format
+            async saveFullSnapshot(snapshotData, actor = 'system') {
+                try {
+                    const snapshotId = crypto.randomUUID();
+                    const res = await fetch(`${this.baseUrl}/swtContent`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            uuid: snapshotId,
+                            agent: actor,
+                            target: 'all',
+                            set: 'snapshots',
+                            operator: 'INS',
+                            payload: snapshotData,
+                            created_at: Date.now()
+                        })
+                    });
+                    if (!res.ok) throw new Error('Failed to save full snapshot');
+                    const result = await res.json();
+                    console.log('ContentAPI: Full snapshot saved', snapshotId);
+                    return result;
+                } catch (err) {
+                    console.error('ContentAPI.saveFullSnapshot error:', err);
+                    throw err;
+                }
+            },
+
+            // Get the latest snapshot
+            async getLatestSnapshot() {
+                try {
+                    const res = await fetch(`${this.baseUrl}/swtContent?set=snapshots&target=all&_sort=-created_at&_limit=1`);
+                    if (!res.ok) throw new Error('Failed to fetch latest snapshot');
+                    const data = await res.json();
+                    // Return the first item if array, or null if empty
+                    return Array.isArray(data) && data.length > 0 ? data[0] : null;
+                } catch (err) {
+                    console.error('ContentAPI.getLatestSnapshot error:', err);
+                    return null;
+                }
+            },
+
             // Legacy methods for backwards compatibility
             async getAll() {
                 return this.getContent();
@@ -6927,6 +6968,78 @@
             getContentCategories() {
                 const categories = [...new Set(this.content.map(c => c.category).filter(Boolean))];
                 return { categories };
+            },
+
+            // ============================================
+            // SNAPSHOT MANAGEMENT
+            // ============================================
+
+            // Frames that should be included in snapshots
+            _snapshotFrames: ['organizations', 'campaigns', 'submissions', 'services', 'regions', 'languages', 'events', 'nav_items', 'sections', 'blocks', 'secure_links', 'secure_features'],
+
+            // Compute full state snapshot from all current states
+            computeFullSnapshot() {
+                const snapshot = {
+                    data: {},
+                    record_counts: {},
+                    computed_at: new Date().toISOString(),
+                    last_activity_ordinal: this.ordinal
+                };
+
+                // Collect all frame data
+                for (const frame of this._snapshotFrames) {
+                    const states = this.getAllCurrentStates(frame);
+                    snapshot.data[frame] = states;
+                    snapshot.record_counts[frame] = states.length;
+                }
+
+                // Include siteData and siteTheme
+                snapshot.data.siteData = this.siteData;
+                snapshot.data.siteTheme = this.siteTheme;
+                snapshot.data.content = this.content;
+                snapshot.record_counts.content = this.content.length;
+
+                return snapshot;
+            },
+
+            // Create and save a snapshot to the API
+            async createSnapshot(actor = 'system') {
+                try {
+                    const snapshotData = this.computeFullSnapshot();
+                    console.log('DB: Creating snapshot with', snapshotData.record_counts);
+                    await ContentAPI.saveFullSnapshot(snapshotData, actor);
+                    console.log('DB: Snapshot created successfully');
+                    Webhooks.log('snapshot_created', {
+                        access_type: 'system',
+                        record_counts: snapshotData.record_counts,
+                        ordinal: snapshotData.last_activity_ordinal
+                    });
+                    return snapshotData;
+                } catch (err) {
+                    console.error('DB: Failed to create snapshot', err);
+                    throw err;
+                }
+            },
+
+            // Check if a snapshot exists, if not create one from current state
+            async ensureSnapshotExists() {
+                try {
+                    const latestSnapshot = await ContentAPI.getLatestSnapshot();
+                    if (!latestSnapshot) {
+                        console.log('DB: No existing snapshot found, creating initial snapshot from current state...');
+                        await this.createSnapshot('system-init');
+                    } else {
+                        console.log('DB: Existing snapshot found, computed at', latestSnapshot.payload?.computed_at);
+                    }
+                } catch (err) {
+                    console.error('DB: Error checking/creating snapshot', err);
+                }
+            },
+
+            // Trigger a snapshot on save (called after bulk saves)
+            async triggerSaveSnapshot(actor = 'admin') {
+                console.log('DB: Triggering snapshot after save...');
+                return this.createSnapshot(actor);
             }
         };
 
@@ -8632,26 +8745,19 @@
         // INIT
         // ============================================
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // INSTANT RENDER: Use cached localStorage data immediately
-            // DB is already pre-loaded with localStorage data (events, siteData, siteTheme)
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Show loading state
+            const mainContent = document.querySelector('main') || document.body;
+            mainContent.style.opacity = '0.5';
+            mainContent.style.pointerEvents = 'none';
 
-            // Apply cached theme immediately if available
-            const cachedTheme = DB.getSiteTheme();
-            if (cachedTheme && Object.keys(cachedTheme).length > 0) {
-                if (typeof smCurrentTheme !== 'undefined' && typeof smApplyThemeToDOM === 'function') {
-                    Object.assign(smCurrentTheme, cachedTheme);
-                    smApplyThemeToDOM();
-                }
-            }
+            console.log('Site loading: Waiting for database initialization...');
 
-            // Render immediately with cached data (no blocking)
-            renderPublicSite();
-            console.log('Site rendered instantly from cache');
+            try {
+                // WAIT for DB to initialize from API before rendering
+                await DB.initialize();
 
-            // BACKGROUND UPDATE: Fetch fresh data from API without blocking
-            DB.initialize().then(() => {
-                // Re-apply theme if API returned updated data
+                // Apply theme from API data
                 const loadedTheme = DB.getSiteTheme();
                 if (loadedTheme && Object.keys(loadedTheme).length > 0) {
                     if (typeof smCurrentTheme !== 'undefined' && typeof smApplyThemeToDOM === 'function') {
@@ -8660,12 +8766,31 @@
                     }
                 }
 
-                // Re-render with fresh API data
+                // Render with API data
                 renderPublicSite();
-                console.log('Site updated with fresh API data');
-            }).catch(err => {
-                console.warn('Background API update failed, using cached data:', err);
-            });
+                console.log('Site rendered with API data');
+
+                // Check if a snapshot exists, if not create one from current states
+                await DB.ensureSnapshotExists();
+
+            } catch (err) {
+                console.warn('API initialization failed, attempting cache fallback:', err);
+
+                // Fall back to cached localStorage data
+                const cachedTheme = DB.getSiteTheme();
+                if (cachedTheme && Object.keys(cachedTheme).length > 0) {
+                    if (typeof smCurrentTheme !== 'undefined' && typeof smApplyThemeToDOM === 'function') {
+                        Object.assign(smCurrentTheme, cachedTheme);
+                        smApplyThemeToDOM();
+                    }
+                }
+                renderPublicSite();
+                console.log('Site rendered from cache due to API error');
+            } finally {
+                // Remove loading state
+                mainContent.style.opacity = '1';
+                mainContent.style.pointerEvents = 'auto';
+            }
         });
 
         // ============================================
@@ -9654,13 +9779,21 @@
             ceRenderPreview();
         }
 
-        function ceSaveAllContent() {
+        async function ceSaveAllContent() {
             // Log save action to activity stream
             DB.createEvent('given', 'ALT', 'site_settings', 'bulk_save', {
                 ALT: { field: 'all_content', old_value: '', new_value: 'saved' }
             }, 'admin');
             Webhooks.log('content_bulk_save', { access_type: 'content' });
-            ceShowToast('All content saved to activity stream', 'success');
+
+            // Trigger a snapshot after bulk save
+            try {
+                await DB.triggerSaveSnapshot('admin');
+                ceShowToast('All content saved and snapshot created!', 'success');
+            } catch (err) {
+                console.error('Failed to create snapshot after save:', err);
+                ceShowToast('Content saved, but snapshot failed', 'warning');
+            }
         }
 
         // Preview Rendering
@@ -10078,9 +10211,17 @@
             // Just trigger the save settings function
             await ceSaveSettings();
 
+            // Trigger a snapshot after saving all changes
+            try {
+                await DB.triggerSaveSnapshot('admin');
+                console.log('Snapshot created after inline save all');
+            } catch (err) {
+                console.error('Failed to create snapshot after inline save:', err);
+            }
+
             ceInlineUnsavedChanges = {};
             document.getElementById('ce-inline-unsaved-indicator').classList.remove('active');
-            ceShowToast('All changes saved!', 'success');
+            ceShowToast('All changes saved and snapshot created!', 'success');
         }
 
         // Discard all inline changes
