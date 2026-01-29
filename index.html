@@ -3526,7 +3526,607 @@
             .ce-cms-panel { width: 100%; }
             .ce-editor-container { flex-direction: column; }
         }
+        /* ============================================
+           CANVAS EDITOR STYLES
+           ============================================ */
+        .canvas-editor-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 20000;
+            background: #1a1a2e;
+        }
+
+        .canvas-editor-container.active {
+            display: flex;
+        }
+
+        /* Canvas Editor Layout */
+        .canvas-editor-layout {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Left Panel - Blocks */
+        .canvas-blocks-panel {
+            width: 260px;
+            background: #16213e;
+            border-right: 1px solid #0f3460;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .canvas-panel-header {
+            padding: 16px;
+            border-bottom: 1px solid #0f3460;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .canvas-panel-header h3 {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .canvas-panel-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .canvas-panel-close:hover {
+            color: #fff;
+        }
+
+        .canvas-blocks-search {
+            padding: 12px 16px;
+            border-bottom: 1px solid #0f3460;
+        }
+
+        .canvas-blocks-search input {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0f3460;
+            border: 1px solid #1e3a5f;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .canvas-blocks-search input::placeholder {
+            color: #64748b;
+        }
+
+        .canvas-blocks-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .canvas-block-category {
+            margin-bottom: 16px;
+        }
+
+        .canvas-block-category-title {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0 4px 8px;
+        }
+
+        .canvas-block-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: #0f3460;
+            border: 1px solid #1e3a5f;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: grab;
+            transition: all 0.15s;
+        }
+
+        .canvas-block-item:hover {
+            background: #1e3a5f;
+            border-color: #e94560;
+        }
+
+        .canvas-block-item:active {
+            cursor: grabbing;
+        }
+
+        .canvas-block-item .icon {
+            font-size: 18px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(233, 69, 96, 0.1);
+            border-radius: 4px;
+        }
+
+        .canvas-block-item .name {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Center - Canvas Area */
+        .canvas-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .canvas-toolbar {
+            height: 48px;
+            background: #16213e;
+            border-bottom: 1px solid #0f3460;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .canvas-toolbar-left,
+        .canvas-toolbar-center,
+        .canvas-toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .canvas-toolbar-btn {
+            padding: 6px 12px;
+            background: #0f3460;
+            border: 1px solid #1e3a5f;
+            border-radius: 4px;
+            color: #94a3b8;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+
+        .canvas-toolbar-btn:hover {
+            background: #1e3a5f;
+            color: #fff;
+        }
+
+        .canvas-toolbar-btn.active {
+            background: #e94560;
+            border-color: #e94560;
+            color: #fff;
+        }
+
+        .canvas-toolbar-btn.primary {
+            background: #e94560;
+            border-color: #e94560;
+            color: #fff;
+        }
+
+        .canvas-toolbar-btn.primary:hover {
+            background: #d63d56;
+        }
+
+        .canvas-device-btns {
+            display: flex;
+            gap: 4px;
+        }
+
+        .canvas-device-btn {
+            padding: 6px 10px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .canvas-device-btn:hover {
+            color: #94a3b8;
+        }
+
+        .canvas-device-btn.active {
+            background: #0f3460;
+            border-color: #1e3a5f;
+            color: #fff;
+        }
+
+        .canvas-zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .canvas-zoom-control input {
+            width: 80px;
+        }
+
+        /* Canvas Viewport */
+        .canvas-viewport {
+            flex: 1;
+            background: #0f0f1a;
+            overflow: auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .canvas-frame {
+            background: #fff;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: width 0.3s, transform 0.3s;
+            transform-origin: top center;
+            min-height: 600px;
+        }
+
+        .canvas-frame.desktop {
+            width: 1200px;
+        }
+
+        .canvas-frame.tablet {
+            width: 768px;
+        }
+
+        .canvas-frame.mobile {
+            width: 375px;
+        }
+
+        /* Canvas Block Selection */
+        .canvas-frame [data-canvas-block] {
+            position: relative;
+            outline: 2px solid transparent;
+            outline-offset: -2px;
+            transition: outline-color 0.15s;
+        }
+
+        .canvas-frame [data-canvas-block]:hover {
+            outline-color: rgba(233, 69, 96, 0.5);
+        }
+
+        .canvas-frame [data-canvas-block].selected {
+            outline-color: #e94560;
+        }
+
+        .canvas-frame [data-canvas-block].selected::before {
+            content: attr(data-block-label);
+            position: absolute;
+            top: -24px;
+            left: 0;
+            background: #e94560;
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 3px 3px 0 0;
+            font-weight: 500;
+            z-index: 100;
+        }
+
+        /* Resize Handles */
+        .canvas-resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #e94560;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            z-index: 101;
+        }
+
+        .canvas-resize-handle.nw { top: -5px; left: -5px; cursor: nwse-resize; }
+        .canvas-resize-handle.n { top: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+        .canvas-resize-handle.ne { top: -5px; right: -5px; cursor: nesw-resize; }
+        .canvas-resize-handle.e { top: 50%; right: -5px; transform: translateY(-50%); cursor: ew-resize; }
+        .canvas-resize-handle.se { bottom: -5px; right: -5px; cursor: nwse-resize; }
+        .canvas-resize-handle.s { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+        .canvas-resize-handle.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+        .canvas-resize-handle.w { top: 50%; left: -5px; transform: translateY(-50%); cursor: ew-resize; }
+
+        /* Drag Placeholder */
+        .canvas-drag-placeholder {
+            background: rgba(233, 69, 96, 0.1);
+            border: 2px dashed #e94560;
+            border-radius: 4px;
+            min-height: 60px;
+        }
+
+        /* Right Panel - Properties */
+        .canvas-properties-panel {
+            width: 300px;
+            background: #16213e;
+            border-left: 1px solid #0f3460;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .canvas-properties-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .canvas-prop-section {
+            margin-bottom: 20px;
+        }
+
+        .canvas-prop-section-title {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .canvas-prop-group {
+            margin-bottom: 12px;
+        }
+
+        .canvas-prop-group label {
+            display: block;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .canvas-prop-input {
+            width: 100%;
+            padding: 8px 10px;
+            background: #0f3460;
+            border: 1px solid #1e3a5f;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .canvas-prop-input:focus {
+            outline: none;
+            border-color: #e94560;
+        }
+
+        .canvas-prop-select {
+            width: 100%;
+            padding: 8px 10px;
+            background: #0f3460;
+            border: 1px solid #1e3a5f;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .canvas-prop-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .canvas-prop-row .canvas-prop-group {
+            flex: 1;
+        }
+
+        /* Empty State */
+        .canvas-empty-props {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+
+        .canvas-empty-props .icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .canvas-empty-props p {
+            font-size: 13px;
+        }
+
+        /* CMS Folder View Styles */
+        .cms-folder-view {
+            padding: 16px;
+        }
+
+        .cms-folder-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .cms-folder-item:hover {
+            border-color: var(--orange);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .cms-folder-item.active {
+            border-color: var(--orange);
+            background: rgba(255, 130, 0, 0.05);
+        }
+
+        .cms-folder-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            border-radius: 8px;
+        }
+
+        .cms-folder-info {
+            flex: 1;
+        }
+
+        .cms-folder-name {
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 2px;
+        }
+
+        .cms-folder-desc {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .cms-folder-count {
+            background: var(--gray-100);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+
+        .cms-folder-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .cms-folder-action-btn {
+            padding: 6px;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            color: var(--gray-400);
+            cursor: pointer;
+        }
+
+        .cms-folder-action-btn:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        /* Schema Builder Styles */
+        .schema-builder {
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .schema-builder-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .schema-builder-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .schema-field-list {
+            padding: 16px 20px;
+        }
+
+        .schema-field-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--gray-50);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .schema-field-drag {
+            color: var(--gray-400);
+            cursor: grab;
+        }
+
+        .schema-field-type {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .schema-field-info {
+            flex: 1;
+        }
+
+        .schema-field-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .schema-field-meta {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .schema-field-required {
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .schema-field-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .schema-add-field {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            border: 2px dashed var(--gray-300);
+            border-radius: 6px;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .schema-add-field:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
     </style>
+
+    <!-- GrapesJS Library -->
+    <link href="https://unpkg.com/grapesjs@0.21.10/dist/css/grapes.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/grapesjs@0.21.10/dist/grapes.min.js"></script>
+    <!-- interact.js for drag/resize (lightweight alternative) -->
+    <script src="https://unpkg.com/interactjs@1.10.17/dist/interact.min.js"></script>
+    <!-- SortableJS for reordering -->
+    <script src="https://unpkg.com/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
 <body>
     <!-- ============================================
@@ -5383,6 +5983,177 @@
         <span>You have unsaved changes</span>
         <button class="save-btn" onclick="ceInlineSaveAllChanges()">Save All</button>
         <button class="discard-btn" onclick="ceInlineDiscardChanges()">Discard</button>
+    </div>
+
+    <!-- ============================================
+         CANVAS EDITOR (Squarespace-style)
+         ============================================ -->
+    <div class="canvas-editor-container" id="canvas-editor-container">
+        <div class="canvas-editor-layout">
+            <!-- Left Panel - Blocks Library -->
+            <div class="canvas-blocks-panel">
+                <div class="canvas-panel-header">
+                    <h3>Blocks</h3>
+                    <button class="canvas-panel-close" onclick="closeCanvasEditor()">&times;</button>
+                </div>
+                <div class="canvas-blocks-search">
+                    <input type="text" placeholder="Search blocks..." id="canvas-block-search" oninput="filterCanvasBlocks(this.value)">
+                </div>
+                <div class="canvas-blocks-list" id="canvas-blocks-list">
+                    <!-- Layout Blocks -->
+                    <div class="canvas-block-category">
+                        <div class="canvas-block-category-title">Layout</div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="section">
+                            <span class="icon">&#9634;</span>
+                            <span class="name">Section</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="grid">
+                            <span class="icon">&#9638;</span>
+                            <span class="name">Grid (2-4 cols)</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="columns">
+                            <span class="icon">&#9641;</span>
+                            <span class="name">Columns</span>
+                        </div>
+                    </div>
+
+                    <!-- Content Blocks -->
+                    <div class="canvas-block-category">
+                        <div class="canvas-block-category-title">Content</div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="hero">
+                            <span class="icon">&#9733;</span>
+                            <span class="name">Hero Section</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="heading">
+                            <span class="icon">H</span>
+                            <span class="name">Heading</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="text">
+                            <span class="icon">T</span>
+                            <span class="name">Text Block</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="image">
+                            <span class="icon">&#128247;</span>
+                            <span class="name">Image</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="button">
+                            <span class="icon">&#9744;</span>
+                            <span class="name">Button</span>
+                        </div>
+                    </div>
+
+                    <!-- Data Blocks -->
+                    <div class="canvas-block-category">
+                        <div class="canvas-block-category-title">Dynamic Content</div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="org-card">
+                            <span class="icon">&#127970;</span>
+                            <span class="name">Organization Card</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="campaign-card">
+                            <span class="icon">&#128176;</span>
+                            <span class="name">Campaign Card</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="org-list">
+                            <span class="icon">&#128203;</span>
+                            <span class="name">Organization List</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="campaign-list">
+                            <span class="icon">&#128202;</span>
+                            <span class="name">Campaign List</span>
+                        </div>
+                    </div>
+
+                    <!-- Component Blocks -->
+                    <div class="canvas-block-category">
+                        <div class="canvas-block-category-title">Components</div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="accordion">
+                            <span class="icon">&#9660;</span>
+                            <span class="name">Accordion</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="divider">
+                            <span class="icon">&mdash;</span>
+                            <span class="name">Divider</span>
+                        </div>
+                        <div class="canvas-block-item" draggable="true" data-block-type="spacer">
+                            <span class="icon">&#8597;</span>
+                            <span class="name">Spacer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center - Canvas -->
+            <div class="canvas-main">
+                <div class="canvas-toolbar">
+                    <div class="canvas-toolbar-left">
+                        <button class="canvas-toolbar-btn" onclick="canvasUndo()" title="Undo">
+                            <span>&#8630;</span> Undo
+                        </button>
+                        <button class="canvas-toolbar-btn" onclick="canvasRedo()" title="Redo">
+                            <span>&#8631;</span> Redo
+                        </button>
+                    </div>
+
+                    <div class="canvas-toolbar-center">
+                        <div class="canvas-device-btns">
+                            <button class="canvas-device-btn active" onclick="setCanvasDevice('desktop')" title="Desktop">&#128421;</button>
+                            <button class="canvas-device-btn" onclick="setCanvasDevice('tablet')" title="Tablet">&#128241;</button>
+                            <button class="canvas-device-btn" onclick="setCanvasDevice('mobile')" title="Mobile">&#128242;</button>
+                        </div>
+                        <div class="canvas-zoom-control">
+                            <span>Zoom:</span>
+                            <input type="range" min="25" max="150" value="100" id="canvas-zoom" oninput="setCanvasZoom(this.value)">
+                            <span id="canvas-zoom-value">100%</span>
+                        </div>
+                    </div>
+
+                    <div class="canvas-toolbar-right">
+                        <button class="canvas-toolbar-btn" onclick="previewCanvasPage()">
+                            <span>&#128065;</span> Preview
+                        </button>
+                        <button class="canvas-toolbar-btn primary" onclick="saveCanvasChanges()">
+                            <span>&#10003;</span> Save
+                        </button>
+                    </div>
+                </div>
+
+                <div class="canvas-viewport" id="canvas-viewport">
+                    <div class="canvas-frame desktop" id="canvas-frame">
+                        <!-- Canvas content will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Properties -->
+            <div class="canvas-properties-panel">
+                <div class="canvas-panel-header">
+                    <h3>Properties</h3>
+                </div>
+                <div class="canvas-properties-content" id="canvas-properties">
+                    <div class="canvas-empty-props">
+                        <div class="icon">&#128073;</div>
+                        <p>Select a block to edit its properties</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schema Builder Modal -->
+    <div class="modal-overlay" id="schema-modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="schema-modal-title">Edit Schema</h3>
+                <button class="modal-close" onclick="closeSchemaModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="schema-modal-body">
+                <!-- Schema builder form -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeSchemaModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSchema()">Save Schema</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -10224,6 +10995,927 @@
                 }
             }
         });
+
+        // ============================================
+        // CANVAS EDITOR - Squarespace-style Page Builder
+        // ============================================
+
+        // Canvas Editor State
+        let canvasBlocks = [];
+        let canvasSelectedBlock = null;
+        let canvasHistory = [];
+        let canvasHistoryIndex = -1;
+        let canvasCurrentDevice = 'desktop';
+        let canvasZoomLevel = 100;
+
+        // Block Type Definitions
+        const canvasBlockTypes = {
+            section: {
+                name: 'Section',
+                icon: '&#9634;',
+                defaultContent: '<section class="section" style="padding: 4rem 2rem; min-height: 200px;"><div class="content-wrapper"></div></section>',
+                properties: ['background', 'padding', 'minHeight'],
+                canContain: true
+            },
+            grid: {
+                name: 'Grid',
+                icon: '&#9638;',
+                defaultContent: '<div class="grid-block" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 1rem;"></div>',
+                properties: ['columns', 'gap'],
+                canContain: true
+            },
+            columns: {
+                name: 'Columns',
+                icon: '&#9641;',
+                defaultContent: '<div class="columns-block" style="display: flex; gap: 2rem;"><div style="flex: 1;"></div><div style="flex: 1;"></div></div>',
+                properties: ['layout', 'gap'],
+                canContain: true
+            },
+            hero: {
+                name: 'Hero Section',
+                icon: '&#9733;',
+                defaultContent: `
+                    <section class="section section-hero" style="min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 4rem 2rem;">
+                        <div class="content-wrapper">
+                            <h1 contenteditable="true">Your Headline Here</h1>
+                            <p contenteditable="true">Supporting text that explains what this section is about.</p>
+                            <div class="button-group" style="margin-top: 2rem;">
+                                <a href="#" class="public-btn">Get Started</a>
+                            </div>
+                        </div>
+                    </section>
+                `,
+                properties: ['title', 'subtitle', 'ctaText', 'ctaUrl', 'background', 'minHeight']
+            },
+            heading: {
+                name: 'Heading',
+                icon: 'H',
+                defaultContent: '<h2 contenteditable="true" style="margin: 1rem 0;">Heading Text</h2>',
+                properties: ['level', 'text', 'alignment']
+            },
+            text: {
+                name: 'Text Block',
+                icon: 'T',
+                defaultContent: '<p contenteditable="true" style="margin: 1rem 0;">Your text content goes here. Click to edit.</p>',
+                properties: ['text', 'alignment']
+            },
+            image: {
+                name: 'Image',
+                icon: '&#128247;',
+                defaultContent: '<div class="image-block" style="padding: 1rem; text-align: center;"><div style="background: #e5e7eb; padding: 3rem; border-radius: 8px;">&#128247; Click to add image</div></div>',
+                properties: ['src', 'alt', 'width', 'alignment']
+            },
+            button: {
+                name: 'Button',
+                icon: '&#9744;',
+                defaultContent: '<div style="padding: 1rem;"><a href="#" class="public-btn" contenteditable="true">Button Text</a></div>',
+                properties: ['text', 'url', 'style']
+            },
+            'org-card': {
+                name: 'Organization Card',
+                icon: '&#127970;',
+                defaultContent: `
+                    <div class="org-card-block" style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin: 1rem;">
+                        <h3 style="margin-bottom: 0.5rem;">Organization Name</h3>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Organization description goes here.</p>
+                        <span style="background: #10b981; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px;">Verified</span>
+                    </div>
+                `,
+                properties: ['contentLink', 'displayFields']
+            },
+            'campaign-card': {
+                name: 'Campaign Card',
+                icon: '&#128176;',
+                defaultContent: `
+                    <div class="campaign-card-block" style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin: 1rem;">
+                        <h3 style="margin-bottom: 0.5rem;">Campaign Title</h3>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Support this important cause...</p>
+                        <a href="#" class="public-btn" style="font-size: 14px; padding: 8px 16px;">Donate Now</a>
+                    </div>
+                `,
+                properties: ['contentLink', 'displayFields']
+            },
+            'org-list': {
+                name: 'Organization List',
+                icon: '&#128203;',
+                defaultContent: `
+                    <div class="org-list-block" style="padding: 1rem;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                            <div style="background: #f9fafb; padding: 1rem; border-radius: 8px;">[Organization 1]</div>
+                            <div style="background: #f9fafb; padding: 1rem; border-radius: 8px;">[Organization 2]</div>
+                            <div style="background: #f9fafb; padding: 1rem; border-radius: 8px;">[Organization 3]</div>
+                        </div>
+                    </div>
+                `,
+                properties: ['contentType', 'filter', 'limit', 'layout']
+            },
+            'campaign-list': {
+                name: 'Campaign List',
+                icon: '&#128202;',
+                defaultContent: `
+                    <div class="campaign-list-block" style="padding: 1rem;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                            <div style="background: #f9fafb; padding: 1rem; border-radius: 8px;">[Campaign 1]</div>
+                            <div style="background: #f9fafb; padding: 1rem; border-radius: 8px;">[Campaign 2]</div>
+                        </div>
+                    </div>
+                `,
+                properties: ['contentType', 'filter', 'limit', 'layout']
+            },
+            accordion: {
+                name: 'Accordion',
+                icon: '&#9660;',
+                defaultContent: `
+                    <div class="accordion-block" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin: 1rem 0;">
+                        <div class="accordion-item">
+                            <div class="accordion-header" style="padding: 1rem; background: #f9fafb; cursor: pointer; display: flex; justify-content: space-between;" contenteditable="true">
+                                <span>Accordion Item Title</span>
+                                <span>+</span>
+                            </div>
+                            <div class="accordion-content" style="padding: 1rem; display: none;">
+                                <p contenteditable="true">Accordion content goes here.</p>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                properties: ['title', 'content', 'defaultOpen']
+            },
+            divider: {
+                name: 'Divider',
+                icon: '&mdash;',
+                defaultContent: '<hr style="border: none; border-top: 1px solid #e5e7eb; margin: 2rem 0;">',
+                properties: ['style', 'width', 'color']
+            },
+            spacer: {
+                name: 'Spacer',
+                icon: '&#8597;',
+                defaultContent: '<div class="spacer-block" style="height: 60px;"></div>',
+                properties: ['height']
+            }
+        };
+
+        // Open Canvas Editor
+        function openCanvasEditor() {
+            document.getElementById('canvas-editor-container').classList.add('active');
+            document.getElementById('content-editor-view').classList.remove('active');
+            document.getElementById('admin-dashboard').classList.remove('active');
+            document.getElementById('public-site').classList.add('hidden');
+
+            // Initialize canvas with current page content
+            initializeCanvas();
+            initializeBlockDragging();
+        }
+
+        // Close Canvas Editor
+        function closeCanvasEditor() {
+            document.getElementById('canvas-editor-container').classList.remove('active');
+            document.getElementById('admin-dashboard').classList.add('active');
+        }
+
+        // Initialize Canvas with page content
+        function initializeCanvas() {
+            const frame = document.getElementById('canvas-frame');
+            const publicSite = document.getElementById('public-site');
+
+            // Clone the public site content into the canvas
+            frame.innerHTML = publicSite.innerHTML;
+
+            // Make blocks selectable and editable
+            makeBlocksSelectable(frame);
+
+            // Save initial state for undo
+            saveCanvasState();
+        }
+
+        // Make blocks selectable
+        function makeBlocksSelectable(container) {
+            // Add click handlers to sections and major elements
+            const selectableElements = container.querySelectorAll('section, .header, .footer, .content-wrapper > *, .accordion-item');
+
+            selectableElements.forEach((el, index) => {
+                el.setAttribute('data-canvas-block', `block-${index}`);
+                el.setAttribute('data-block-label', getBlockLabel(el));
+
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectCanvasBlock(el);
+                });
+            });
+        }
+
+        // Get a label for a block
+        function getBlockLabel(el) {
+            const tag = el.tagName.toLowerCase();
+            const className = el.className.split(' ')[0] || '';
+
+            if (el.classList.contains('section-hero')) return 'Hero';
+            if (el.classList.contains('section-dark')) return 'Dark Section';
+            if (el.classList.contains('section-light')) return 'Light Section';
+            if (el.classList.contains('header')) return 'Header';
+            if (el.classList.contains('footer')) return 'Footer';
+            if (tag === 'section') return 'Section';
+            if (tag === 'h1' || tag === 'h2' || tag === 'h3') return 'Heading';
+            if (tag === 'p') return 'Text';
+            if (el.classList.contains('accordion-item')) return 'Accordion';
+
+            return className || tag;
+        }
+
+        // Select a block
+        function selectCanvasBlock(el) {
+            // Deselect previous
+            const prev = document.querySelector('.canvas-frame [data-canvas-block].selected');
+            if (prev) prev.classList.remove('selected');
+
+            // Select new
+            el.classList.add('selected');
+            canvasSelectedBlock = el;
+
+            // Show properties
+            showBlockProperties(el);
+
+            // Add resize handles (for appropriate blocks)
+            addResizeHandles(el);
+        }
+
+        // Show block properties panel
+        function showBlockProperties(el) {
+            const propsContainer = document.getElementById('canvas-properties');
+            const label = el.getAttribute('data-block-label') || 'Block';
+
+            let propsHTML = `
+                <div class="canvas-prop-section">
+                    <div class="canvas-prop-section-title">${label} Properties</div>
+            `;
+
+            // Background color
+            const bgColor = getComputedStyle(el).backgroundColor;
+            propsHTML += `
+                <div class="canvas-prop-group">
+                    <label>Background</label>
+                    <input type="color" class="canvas-prop-input" value="${rgbToHex(bgColor)}" onchange="updateBlockStyle('backgroundColor', this.value)">
+                </div>
+            `;
+
+            // Text color
+            const textColor = getComputedStyle(el).color;
+            propsHTML += `
+                <div class="canvas-prop-group">
+                    <label>Text Color</label>
+                    <input type="color" class="canvas-prop-input" value="${rgbToHex(textColor)}" onchange="updateBlockStyle('color', this.value)">
+                </div>
+            `;
+
+            // Padding
+            propsHTML += `
+                <div class="canvas-prop-group">
+                    <label>Padding</label>
+                    <input type="text" class="canvas-prop-input" value="${getComputedStyle(el).padding}" onchange="updateBlockStyle('padding', this.value)">
+                </div>
+            `;
+
+            // Min Height (for sections)
+            if (el.tagName.toLowerCase() === 'section') {
+                propsHTML += `
+                    <div class="canvas-prop-group">
+                        <label>Min Height</label>
+                        <input type="text" class="canvas-prop-input" value="${el.style.minHeight || 'auto'}" onchange="updateBlockStyle('minHeight', this.value)">
+                    </div>
+                `;
+            }
+
+            propsHTML += `</div>`;
+
+            // Layout section
+            propsHTML += `
+                <div class="canvas-prop-section">
+                    <div class="canvas-prop-section-title">Layout</div>
+                    <div class="canvas-prop-group">
+                        <label>Text Align</label>
+                        <select class="canvas-prop-select" onchange="updateBlockStyle('textAlign', this.value)">
+                            <option value="left">Left</option>
+                            <option value="center" ${getComputedStyle(el).textAlign === 'center' ? 'selected' : ''}>Center</option>
+                            <option value="right">Right</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+
+            // Actions section
+            propsHTML += `
+                <div class="canvas-prop-section">
+                    <div class="canvas-prop-section-title">Actions</div>
+                    <div class="canvas-prop-group">
+                        <button class="canvas-toolbar-btn" style="width: 100%; justify-content: center;" onclick="duplicateBlock()">
+                            Duplicate Block
+                        </button>
+                    </div>
+                    <div class="canvas-prop-group">
+                        <button class="canvas-toolbar-btn" style="width: 100%; justify-content: center; color: #ef4444;" onclick="deleteBlock()">
+                            Delete Block
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            propsContainer.innerHTML = propsHTML;
+        }
+
+        // Update block style
+        function updateBlockStyle(property, value) {
+            if (canvasSelectedBlock) {
+                canvasSelectedBlock.style[property] = value;
+                saveCanvasState();
+            }
+        }
+
+        // RGB to Hex converter
+        function rgbToHex(rgb) {
+            if (!rgb || rgb === 'transparent' || rgb === 'rgba(0, 0, 0, 0)') return '#ffffff';
+            const match = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+            if (!match) return '#ffffff';
+            return '#' + [match[1], match[2], match[3]].map(x => {
+                const hex = parseInt(x).toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            }).join('');
+        }
+
+        // Add resize handles
+        function addResizeHandles(el) {
+            // Remove existing handles
+            document.querySelectorAll('.canvas-resize-handle').forEach(h => h.remove());
+
+            if (el.tagName.toLowerCase() !== 'section') return;
+
+            // Add handles using interact.js for resizing
+            if (typeof interact !== 'undefined') {
+                interact(el).resizable({
+                    edges: { left: false, right: false, bottom: true, top: false },
+                    listeners: {
+                        move(event) {
+                            let { x, y } = event.target.dataset;
+                            x = (parseFloat(x) || 0) + event.deltaRect.left;
+                            y = (parseFloat(y) || 0) + event.deltaRect.top;
+
+                            Object.assign(event.target.style, {
+                                width: `${event.rect.width}px`,
+                                height: `${event.rect.height}px`,
+                            });
+
+                            Object.assign(event.target.dataset, { x, y });
+                        },
+                        end() {
+                            saveCanvasState();
+                        }
+                    },
+                    modifiers: [
+                        interact.modifiers.restrictSize({
+                            min: { height: 100 }
+                        })
+                    ]
+                });
+            }
+        }
+
+        // Initialize block dragging from palette
+        function initializeBlockDragging() {
+            const blockItems = document.querySelectorAll('.canvas-block-item');
+
+            blockItems.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('block-type', item.getAttribute('data-block-type'));
+                    item.classList.add('dragging');
+                });
+
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                });
+            });
+
+            // Make canvas droppable
+            const canvasFrame = document.getElementById('canvas-frame');
+
+            canvasFrame.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+            });
+
+            canvasFrame.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const blockType = e.dataTransfer.getData('block-type');
+
+                if (blockType && canvasBlockTypes[blockType]) {
+                    addBlockToCanvas(blockType, e.target);
+                }
+            });
+        }
+
+        // Add block to canvas
+        function addBlockToCanvas(blockType, targetElement) {
+            const blockDef = canvasBlockTypes[blockType];
+            if (!blockDef) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = blockDef.defaultContent;
+            const newBlock = wrapper.firstElementChild;
+
+            const blockId = 'block-' + Date.now();
+            newBlock.setAttribute('data-canvas-block', blockId);
+            newBlock.setAttribute('data-block-label', blockDef.name);
+            newBlock.setAttribute('data-block-type', blockType);
+
+            // Add click handler
+            newBlock.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectCanvasBlock(newBlock);
+            });
+
+            // Find appropriate insert location
+            const canvasFrame = document.getElementById('canvas-frame');
+            const sections = canvasFrame.querySelectorAll('section');
+
+            if (sections.length > 0) {
+                // Insert after the last section
+                sections[sections.length - 1].after(newBlock);
+            } else {
+                canvasFrame.appendChild(newBlock);
+            }
+
+            // Select the new block
+            selectCanvasBlock(newBlock);
+            saveCanvasState();
+
+            ceShowToast(`Added ${blockDef.name}`, 'success');
+        }
+
+        // Duplicate block
+        function duplicateBlock() {
+            if (!canvasSelectedBlock) return;
+
+            const clone = canvasSelectedBlock.cloneNode(true);
+            const blockId = 'block-' + Date.now();
+            clone.setAttribute('data-canvas-block', blockId);
+            clone.classList.remove('selected');
+
+            clone.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectCanvasBlock(clone);
+            });
+
+            canvasSelectedBlock.after(clone);
+            selectCanvasBlock(clone);
+            saveCanvasState();
+
+            ceShowToast('Block duplicated', 'success');
+        }
+
+        // Delete block
+        function deleteBlock() {
+            if (!canvasSelectedBlock) return;
+
+            if (confirm('Delete this block?')) {
+                canvasSelectedBlock.remove();
+                canvasSelectedBlock = null;
+
+                // Reset properties panel
+                document.getElementById('canvas-properties').innerHTML = `
+                    <div class="canvas-empty-props">
+                        <div class="icon">&#128073;</div>
+                        <p>Select a block to edit its properties</p>
+                    </div>
+                `;
+
+                saveCanvasState();
+                ceShowToast('Block deleted', 'success');
+            }
+        }
+
+        // Set canvas device
+        function setCanvasDevice(device) {
+            canvasCurrentDevice = device;
+            const frame = document.getElementById('canvas-frame');
+
+            frame.classList.remove('desktop', 'tablet', 'mobile');
+            frame.classList.add(device);
+
+            // Update button states
+            document.querySelectorAll('.canvas-device-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Set canvas zoom
+        function setCanvasZoom(value) {
+            canvasZoomLevel = value;
+            const frame = document.getElementById('canvas-frame');
+            frame.style.transform = `scale(${value / 100})`;
+            document.getElementById('canvas-zoom-value').textContent = `${value}%`;
+        }
+
+        // Filter blocks in palette
+        function filterCanvasBlocks(query) {
+            const items = document.querySelectorAll('.canvas-block-item');
+            const q = query.toLowerCase();
+
+            items.forEach(item => {
+                const name = item.querySelector('.name').textContent.toLowerCase();
+                item.style.display = name.includes(q) ? 'flex' : 'none';
+            });
+        }
+
+        // Canvas undo/redo
+        function saveCanvasState() {
+            const frame = document.getElementById('canvas-frame');
+            const state = frame.innerHTML;
+
+            // Remove future states if we're not at the end
+            if (canvasHistoryIndex < canvasHistory.length - 1) {
+                canvasHistory = canvasHistory.slice(0, canvasHistoryIndex + 1);
+            }
+
+            canvasHistory.push(state);
+            canvasHistoryIndex = canvasHistory.length - 1;
+
+            // Limit history size
+            if (canvasHistory.length > 50) {
+                canvasHistory.shift();
+                canvasHistoryIndex--;
+            }
+        }
+
+        function canvasUndo() {
+            if (canvasHistoryIndex > 0) {
+                canvasHistoryIndex--;
+                const frame = document.getElementById('canvas-frame');
+                frame.innerHTML = canvasHistory[canvasHistoryIndex];
+                makeBlocksSelectable(frame);
+            }
+        }
+
+        function canvasRedo() {
+            if (canvasHistoryIndex < canvasHistory.length - 1) {
+                canvasHistoryIndex++;
+                const frame = document.getElementById('canvas-frame');
+                frame.innerHTML = canvasHistory[canvasHistoryIndex];
+                makeBlocksSelectable(frame);
+            }
+        }
+
+        // Preview canvas page
+        function previewCanvasPage() {
+            const frame = document.getElementById('canvas-frame');
+            const content = frame.innerHTML;
+
+            // Open in new window
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Preview - Stand With Tennessee</title>
+                    <style>${document.querySelector('style').textContent}</style>
+                </head>
+                <body>
+                    <div id="public-site">${content}</div>
+                </body>
+                </html>
+            `);
+            previewWindow.document.close();
+        }
+
+        // Save canvas changes
+        function saveCanvasChanges() {
+            const frame = document.getElementById('canvas-frame');
+
+            // Update the public site with canvas content
+            const publicSite = document.getElementById('public-site');
+            publicSite.innerHTML = frame.innerHTML;
+
+            // Save to localStorage/API
+            localStorage.setItem('swt_page_content', frame.innerHTML);
+
+            ceShowToast('Changes saved!', 'success');
+        }
+
+        // ============================================
+        // CMS FOLDER VIEW - Content Type Browser
+        // ============================================
+
+        // Extended content type schemas
+        const cmsSchemas = {
+            organizations: {
+                name: 'Organizations',
+                icon: '&#127970;',
+                description: 'Nonprofits, mutual aid groups, legal services',
+                fields: [
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'organization_type', label: 'Type', type: 'select', options: ['nonprofit', 'mutual_aid', 'legal', 'community_group', 'religious', 'government', 'other'] },
+                    { key: 'description', label: 'Description', type: 'richtext' },
+                    { key: 'services', label: 'Services', type: 'relation', relatedTo: 'services', multiple: true },
+                    { key: 'region', label: 'Region', type: 'relation', relatedTo: 'regions' },
+                    { key: 'website', label: 'Website', type: 'url' },
+                    { key: 'phone', label: 'Phone', type: 'phone' },
+                    { key: 'email', label: 'Email', type: 'email' },
+                    { key: 'address', label: 'Address', type: 'address' },
+                    { key: 'languages', label: 'Languages', type: 'relation', relatedTo: 'languages', multiple: true },
+                    { key: 'status', label: 'Status', type: 'status', options: ['draft', 'pending', 'verified', 'archived'] },
+                    { key: 'featured', label: 'Featured', type: 'boolean' }
+                ],
+                listColumns: ['name', 'organization_type', 'status'],
+                defaultSort: '-updated_at'
+            },
+            campaigns: {
+                name: 'Campaigns',
+                icon: '&#128176;',
+                description: 'Crowdfunding and fundraising campaigns',
+                fields: [
+                    { key: 'title', label: 'Title', type: 'text', required: true },
+                    { key: 'platform', label: 'Platform', type: 'select', options: ['gofundme', 'givebutter', 'venmo', 'cashapp', 'paypal', 'other'] },
+                    { key: 'external_url', label: 'Campaign URL', type: 'url', required: true },
+                    { key: 'campaign_type', label: 'Type', type: 'select', options: ['individual_family', 'community', 'legal_fund', 'mutual_aid', 'emergency'] },
+                    { key: 'goal_amount', label: 'Goal Amount', type: 'number' },
+                    { key: 'raised_amount', label: 'Raised Amount', type: 'number' },
+                    { key: 'description', label: 'Description', type: 'richtext' },
+                    { key: 'beneficiary', label: 'Beneficiary', type: 'text' },
+                    { key: 'status', label: 'Status', type: 'status', options: ['draft', 'active', 'completed', 'archived'] }
+                ],
+                listColumns: ['title', 'platform', 'campaign_type', 'status'],
+                defaultSort: '-created_at'
+            },
+            services: {
+                name: 'Service Types',
+                icon: '&#127991;',
+                description: 'Types of services organizations offer',
+                fields: [
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'slug', label: 'Slug', type: 'text' },
+                    { key: 'description', label: 'Description', type: 'textarea' },
+                    { key: 'icon', label: 'Icon', type: 'text' }
+                ],
+                listColumns: ['name', 'slug'],
+                defaultSort: 'name'
+            },
+            regions: {
+                name: 'Regions',
+                icon: '&#128205;',
+                description: 'Geographic regions in Tennessee',
+                fields: [
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'type', label: 'Type', type: 'select', options: ['metro', 'county', 'region'] },
+                    { key: 'counties', label: 'Counties', type: 'textarea' }
+                ],
+                listColumns: ['name', 'type'],
+                defaultSort: 'name'
+            },
+            languages: {
+                name: 'Languages',
+                icon: '&#127760;',
+                description: 'Supported languages for services',
+                fields: [
+                    { key: 'code', label: 'Code', type: 'text', required: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'native_name', label: 'Native Name', type: 'text' }
+                ],
+                listColumns: ['code', 'name', 'native_name'],
+                defaultSort: 'name'
+            },
+            submissions: {
+                name: 'Submissions',
+                icon: '&#128229;',
+                description: 'User-submitted content pending review',
+                fields: [
+                    { key: 'type', label: 'Submission Type', type: 'select', options: ['organization', 'campaign', 'update', 'report'] },
+                    { key: 'data', label: 'Submitted Data', type: 'json' },
+                    { key: 'submitter_email', label: 'Submitter Email', type: 'email' },
+                    { key: 'status', label: 'Status', type: 'status', options: ['pending', 'approved', 'rejected'] },
+                    { key: 'notes', label: 'Review Notes', type: 'textarea' }
+                ],
+                listColumns: ['type', 'status', 'created_at'],
+                defaultSort: '-created_at'
+            }
+        };
+
+        // Field type icons
+        const fieldTypeIcons = {
+            text: 'Aa',
+            richtext: '&#182;',
+            textarea: '&#9776;',
+            number: '#',
+            select: '&#9660;',
+            boolean: '&#10003;',
+            url: '&#128279;',
+            email: '@',
+            phone: '&#128222;',
+            address: '&#127968;',
+            relation: '&#128279;',
+            status: '&#9679;',
+            json: '{}',
+            date: '&#128197;',
+            image: '&#128247;'
+        };
+
+        // Render CMS folder view
+        function renderCmsFolderView() {
+            const container = document.getElementById('ce-content-types');
+            if (!container) return;
+
+            let html = '<div class="cms-folder-view">';
+
+            Object.entries(cmsSchemas).forEach(([key, schema]) => {
+                const count = DB.getAllCurrentStates(key).length;
+                const isActive = ceSelectedContentType === key;
+
+                html += `
+                    <div class="cms-folder-item ${isActive ? 'active' : ''}" onclick="ceSelectContentType('${key}')">
+                        <div class="cms-folder-icon">${schema.icon}</div>
+                        <div class="cms-folder-info">
+                            <div class="cms-folder-name">${schema.name}</div>
+                            <div class="cms-folder-desc">${schema.description}</div>
+                        </div>
+                        <div class="cms-folder-count">${count}</div>
+                        <div class="cms-folder-actions">
+                            <button class="cms-folder-action-btn" onclick="event.stopPropagation(); openSchemaBuilder('${key}')" title="Edit Schema">
+                                &#9881;
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="cms-folder-item" style="border-style: dashed; justify-content: center;" onclick="createNewContentType()">
+                    <span style="color: var(--gray-500);">+ Create New Content Type</span>
+                </div>
+            `;
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Open schema builder modal
+        function openSchemaBuilder(contentTypeKey) {
+            const schema = cmsSchemas[contentTypeKey];
+            if (!schema) return;
+
+            const modal = document.getElementById('schema-modal');
+            const title = document.getElementById('schema-modal-title');
+            const body = document.getElementById('schema-modal-body');
+
+            title.textContent = `Edit Schema: ${schema.name}`;
+
+            let fieldsHTML = schema.fields.map((field, index) => `
+                <div class="schema-field-item" data-field-index="${index}">
+                    <div class="schema-field-drag">&#8942;&#8942;</div>
+                    <div class="schema-field-type">${fieldTypeIcons[field.type] || '?'}</div>
+                    <div class="schema-field-info">
+                        <div class="schema-field-name">${field.label}</div>
+                        <div class="schema-field-meta">${field.key} | ${field.type}</div>
+                    </div>
+                    ${field.required ? '<span class="schema-field-required">Required</span>' : ''}
+                    <div class="schema-field-actions">
+                        <button class="cms-folder-action-btn" onclick="editSchemaField('${contentTypeKey}', ${index})">&#9998;</button>
+                        <button class="cms-folder-action-btn" onclick="deleteSchemaField('${contentTypeKey}', ${index})">&#128465;</button>
+                    </div>
+                </div>
+            `).join('');
+
+            body.innerHTML = `
+                <div class="schema-builder">
+                    <div class="schema-builder-header">
+                        <h3>Fields</h3>
+                    </div>
+                    <div class="schema-field-list" id="schema-field-list" data-content-type="${contentTypeKey}">
+                        ${fieldsHTML}
+                        <div class="schema-add-field" onclick="addSchemaField('${contentTypeKey}')">
+                            + Add Field
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.style.display = 'flex';
+
+            // Make fields sortable
+            if (typeof Sortable !== 'undefined') {
+                Sortable.create(document.getElementById('schema-field-list'), {
+                    animation: 150,
+                    handle: '.schema-field-drag',
+                    onEnd: function(evt) {
+                        // Reorder fields in schema
+                        const contentType = evt.target.getAttribute('data-content-type');
+                        const fields = cmsSchemas[contentType].fields;
+                        const [moved] = fields.splice(evt.oldIndex, 1);
+                        fields.splice(evt.newIndex, 0, moved);
+                    }
+                });
+            }
+        }
+
+        function closeSchemaModal() {
+            document.getElementById('schema-modal').style.display = 'none';
+        }
+
+        function saveSchema() {
+            // Save schema changes to localStorage
+            localStorage.setItem('cms_schemas', JSON.stringify(cmsSchemas));
+            closeSchemaModal();
+            ceShowToast('Schema saved!', 'success');
+        }
+
+        function addSchemaField(contentTypeKey) {
+            const fieldName = prompt('Enter field key (e.g., "phone_number"):');
+            if (!fieldName) return;
+
+            const fieldLabel = prompt('Enter field label (e.g., "Phone Number"):');
+            if (!fieldLabel) return;
+
+            const fieldType = prompt('Enter field type (text, textarea, richtext, select, boolean, url, email, number, relation, status):') || 'text';
+
+            cmsSchemas[contentTypeKey].fields.push({
+                key: fieldName,
+                label: fieldLabel,
+                type: fieldType
+            });
+
+            openSchemaBuilder(contentTypeKey); // Refresh
+        }
+
+        function editSchemaField(contentTypeKey, fieldIndex) {
+            const field = cmsSchemas[contentTypeKey].fields[fieldIndex];
+            const newLabel = prompt('Edit field label:', field.label);
+            if (newLabel) {
+                field.label = newLabel;
+                openSchemaBuilder(contentTypeKey);
+            }
+        }
+
+        function deleteSchemaField(contentTypeKey, fieldIndex) {
+            if (confirm('Delete this field from the schema?')) {
+                cmsSchemas[contentTypeKey].fields.splice(fieldIndex, 1);
+                openSchemaBuilder(contentTypeKey);
+            }
+        }
+
+        function createNewContentType() {
+            const key = prompt('Enter content type key (e.g., "resources"):');
+            if (!key) return;
+
+            const name = prompt('Enter content type name (e.g., "Resources"):');
+            if (!name) return;
+
+            cmsSchemas[key] = {
+                name: name,
+                icon: '&#128196;',
+                description: 'Custom content type',
+                fields: [
+                    { key: 'name', label: 'Name', type: 'text', required: true }
+                ],
+                listColumns: ['name'],
+                defaultSort: 'name'
+            };
+
+            // Also add to ceContentTypes for compatibility
+            ceContentTypes[key] = {
+                name: name,
+                description: 'Custom content type',
+                icon: '&#128196;',
+                fields: [
+                    { name: 'name', label: 'Name', type: 'text', required: true }
+                ],
+                tableColumns: ['name']
+            };
+
+            renderCmsFolderView();
+            ceShowToast(`Content type "${name}" created!`, 'success');
+        }
+
+        // Add button to open Canvas Editor in content editor
+        function addCanvasEditorButton() {
+            const previewHeader = document.querySelector('.ce-preview-header h2');
+            if (previewHeader && !document.getElementById('open-canvas-btn')) {
+                const btn = document.createElement('button');
+                btn.id = 'open-canvas-btn';
+                btn.className = 'btn btn-primary btn-sm';
+                btn.style.marginLeft = '12px';
+                btn.innerHTML = '&#9998; Canvas Editor';
+                btn.onclick = openCanvasEditor;
+                previewHeader.appendChild(btn);
+            }
+        }
+
+        // Override ceRenderContentTypes to use folder view
+        const originalCeRenderContentTypes = typeof ceRenderContentTypes === 'function' ? ceRenderContentTypes : null;
+
+        // Hook into content editor open
+        const originalOpenContentEditor = typeof openContentEditor === 'function' ? openContentEditor : null;
+        if (originalOpenContentEditor) {
+            window.openContentEditor = function() {
+                originalOpenContentEditor();
+                setTimeout(() => {
+                    addCanvasEditorButton();
+                    renderCmsFolderView();
+                }, 100);
+            };
+        }
 
     </script>
 </body>
