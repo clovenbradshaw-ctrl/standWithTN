@@ -9755,28 +9755,6 @@
             }
         });
 
-        // Update login handler to enter edit mode instead of admin dashboard
-        const originalLoginHandler = document.getElementById('loginBtn').onclick;
-        document.getElementById('loginBtn').onclick = async function() {
-            const password = document.getElementById('passwordInput').value;
-            const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
-            const hashHex = Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-
-            if (hashHex === '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918') {
-                document.getElementById('loginBackdrop').classList.remove('active');
-                document.getElementById('loginModal').classList.remove('active');
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('loginError').style.display = 'none';
-
-                Webhooks.log('edit_mode_enter', { access_type: 'logging' });
-
-                // Enter WYSIWYG edit mode instead of admin dashboard
-                enterEditMode();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
-        };
-
         // ============================================
         // INIT
         // ============================================
