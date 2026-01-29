@@ -2816,6 +2816,253 @@
             background: var(--gray-50);
         }
 
+        /* ============================================
+           INLINE BLOCK EDITING STYLES
+           ============================================ */
+
+        /* Editable element states */
+        .ce-preview-site [data-inline-edit] {
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .ce-preview-site [data-inline-edit]:hover {
+            outline: 2px dashed var(--orange);
+            outline-offset: 4px;
+        }
+
+        .ce-preview-site [data-inline-edit].ce-inline-editing {
+            outline: 2px solid var(--orange);
+            outline-offset: 4px;
+            background: rgba(255, 130, 0, 0.05);
+            cursor: text;
+        }
+
+        .ce-preview-site [data-inline-edit]:focus {
+            outline: 2px solid var(--orange);
+            outline-offset: 4px;
+        }
+
+        /* Edit hint tooltip */
+        .ce-preview-site [data-inline-edit]::before {
+            content: 'Click to edit';
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 8px;
+            background: var(--orange);
+            color: white;
+            font-size: 11px;
+            font-weight: 500;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+            z-index: 100;
+        }
+
+        .ce-preview-site [data-inline-edit]:hover::before {
+            opacity: 1;
+        }
+
+        .ce-preview-site [data-inline-edit].ce-inline-editing::before {
+            content: 'Editing...';
+            opacity: 1;
+            background: var(--green);
+        }
+
+        /* Inline editing floating toolbar */
+        .ce-inline-toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+            padding: 8px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            z-index: 30000;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: opacity 0.15s, transform 0.15s;
+        }
+
+        .ce-inline-toolbar.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .ce-inline-toolbar-btn {
+            padding: 6px 10px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-600);
+            transition: all 0.15s;
+        }
+
+        .ce-inline-toolbar-btn:hover {
+            background: var(--gray-100);
+            color: var(--gray-800);
+        }
+
+        .ce-inline-toolbar-btn.primary {
+            background: var(--orange);
+            color: white;
+        }
+
+        .ce-inline-toolbar-btn.primary:hover {
+            background: var(--orange-dark, #e07000);
+        }
+
+        .ce-inline-toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--gray-200);
+            margin: 0 4px;
+        }
+
+        .ce-inline-toolbar-label {
+            font-size: 11px;
+            color: var(--gray-500);
+            padding: 0 8px;
+            font-weight: 500;
+        }
+
+        /* Link edit popup for inline editing */
+        .ce-inline-link-popup {
+            position: fixed;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 12px;
+            z-index: 30001;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: opacity 0.15s, transform 0.15s;
+            min-width: 300px;
+        }
+
+        .ce-inline-link-popup.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .ce-inline-link-popup input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .ce-inline-link-popup input:focus {
+            outline: none;
+            border-color: var(--orange);
+        }
+
+        .ce-inline-link-popup-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        /* Section header when inline editing is active */
+        .ce-preview-site.ce-inline-mode [data-block-id] {
+            position: relative;
+        }
+
+        .ce-preview-site.ce-inline-mode [data-block-id]::after {
+            content: attr(data-section-name);
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 8px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 10px;
+            font-weight: 500;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .ce-preview-site.ce-inline-mode [data-block-id]:hover::after {
+            opacity: 1;
+        }
+
+        /* Unsaved changes indicator */
+        .ce-inline-unsaved-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--orange);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 30000;
+            box-shadow: 0 4px 12px rgba(255, 130, 0, 0.3);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+            transition: all 0.2s;
+        }
+
+        .ce-inline-unsaved-indicator.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .ce-inline-unsaved-indicator button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .ce-inline-unsaved-indicator .save-btn {
+            background: white;
+            color: var(--orange);
+        }
+
+        .ce-inline-unsaved-indicator .save-btn:hover {
+            background: var(--gray-100);
+        }
+
+        .ce-inline-unsaved-indicator .discard-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .ce-inline-unsaved-indicator .discard-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
         @media (max-width: 768px) {
             .ce-cms-panel { width: 100%; }
             .ce-editor-container { flex-direction: column; }
@@ -4627,6 +4874,33 @@
 
     <!-- CE Toast notification -->
     <div class="ce-toast" id="ce-toast"></div>
+
+    <!-- Inline Editing Toolbar -->
+    <div class="ce-inline-toolbar" id="ce-inline-toolbar">
+        <span class="ce-inline-toolbar-label" id="ce-inline-toolbar-label">Editing</span>
+        <div class="ce-inline-toolbar-divider"></div>
+        <button class="ce-inline-toolbar-btn" onclick="ceInlineFormatBold()" title="Bold">B</button>
+        <button class="ce-inline-toolbar-btn" onclick="ceInlineFormatItalic()" title="Italic"><i>I</i></button>
+        <div class="ce-inline-toolbar-divider"></div>
+        <button class="ce-inline-toolbar-btn primary" onclick="ceInlineSaveField()">Save</button>
+        <button class="ce-inline-toolbar-btn" onclick="ceInlineCancelEdit()">Cancel</button>
+    </div>
+
+    <!-- Inline Link Edit Popup -->
+    <div class="ce-inline-link-popup" id="ce-inline-link-popup">
+        <input type="url" id="ce-inline-link-input" placeholder="Enter URL...">
+        <div class="ce-inline-link-popup-actions">
+            <button class="ce-inline-toolbar-btn" onclick="ceInlineCloseLinkPopup()">Cancel</button>
+            <button class="ce-inline-toolbar-btn primary" onclick="ceInlineSaveLinkEdit()">Save</button>
+        </div>
+    </div>
+
+    <!-- Unsaved Changes Indicator -->
+    <div class="ce-inline-unsaved-indicator" id="ce-inline-unsaved-indicator">
+        <span>You have unsaved changes</span>
+        <button class="save-btn" onclick="ceInlineSaveAllChanges()">Save All</button>
+        <button class="discard-btn" onclick="ceInlineDiscardChanges()">Discard</button>
+    </div>
 
     <script>
         // ============================================
@@ -7709,6 +7983,379 @@
             }
         }
 
+        // ============================================
+        // INLINE BLOCK EDITING SYSTEM
+        // ============================================
+
+        // Inline editing state
+        let ceInlineCurrentElement = null;
+        let ceInlineOriginalContent = '';
+        let ceInlineUnsavedChanges = {};
+        let ceInlineLinkElement = null;
+
+        // Field display names for the toolbar
+        const ceInlineFieldLabels = {
+            siteName: 'Site Name',
+            heroTitle: 'Hero Title',
+            heroDescription: 'Hero Description',
+            donateUrl: 'Donate URL',
+            featuredButton1: 'Featured Button',
+            mutualAidTitle: 'Mutual Aid Title',
+            mutualAidDescription: 'Mutual Aid Description',
+            crowdfundingTitle: 'Crowdfunding Title',
+            crowdfundingDescription: 'Crowdfunding Description',
+            orgsTitle: 'Organizations Title',
+            orgsDescription: 'Organizations Description',
+            secureMessagingTitle: 'Secure Messaging Title',
+            secureMessagingDescription: 'Secure Messaging Description',
+            contactEmail: 'Contact Email'
+        };
+
+        // Initialize inline editing on a container
+        function ceInitInlineEditing(container) {
+            container.querySelectorAll('[data-inline-edit]').forEach(el => {
+                const editType = el.getAttribute('data-inline-type');
+
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (editType === 'link' || editType === 'email') {
+                        ceInlineOpenLinkPopup(el);
+                    } else if (editType === 'button') {
+                        ceInlineOpenButtonEditor(el);
+                    } else {
+                        ceInlineStartTextEdit(el);
+                    }
+                });
+            });
+        }
+
+        // Start inline text editing
+        function ceInlineStartTextEdit(el) {
+            // Close any existing edit
+            if (ceInlineCurrentElement && ceInlineCurrentElement !== el) {
+                ceInlineCancelEdit();
+            }
+
+            ceInlineCurrentElement = el;
+            ceInlineOriginalContent = el.textContent;
+
+            el.classList.add('ce-inline-editing');
+            el.contentEditable = 'true';
+            el.focus();
+
+            // Select all text
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            // Update and show toolbar
+            const fieldName = el.getAttribute('data-inline-edit');
+            const label = ceInlineFieldLabels[fieldName] || fieldName;
+            document.getElementById('ce-inline-toolbar-label').textContent = `Editing: ${label}`;
+
+            ceInlinePositionToolbar(el);
+            document.getElementById('ce-inline-toolbar').classList.add('active');
+
+            // Handle keyboard shortcuts
+            el.addEventListener('keydown', ceInlineHandleKeydown);
+            el.addEventListener('blur', ceInlineHandleBlur);
+        }
+
+        // Handle keydown in inline edit
+        function ceInlineHandleKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                ceInlineSaveField();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                ceInlineCancelEdit();
+            }
+        }
+
+        // Handle blur
+        function ceInlineHandleBlur(e) {
+            // Small delay to allow toolbar buttons to be clicked
+            setTimeout(() => {
+                if (!document.getElementById('ce-inline-toolbar').contains(document.activeElement) &&
+                    ceInlineCurrentElement && !ceInlineCurrentElement.contains(document.activeElement)) {
+                    // Only save if content changed
+                    if (ceInlineCurrentElement.textContent !== ceInlineOriginalContent) {
+                        ceInlineSaveField();
+                    } else {
+                        ceInlineCancelEdit();
+                    }
+                }
+            }, 150);
+        }
+
+        // Position toolbar above element
+        function ceInlinePositionToolbar(el) {
+            const toolbar = document.getElementById('ce-inline-toolbar');
+            const rect = el.getBoundingClientRect();
+            const toolbarRect = toolbar.getBoundingClientRect();
+
+            let top = rect.top - toolbarRect.height - 12;
+            let left = rect.left + (rect.width / 2) - (toolbarRect.width / 2);
+
+            // Keep toolbar in viewport
+            if (top < 10) top = rect.bottom + 12;
+            if (left < 10) left = 10;
+            if (left + toolbarRect.width > window.innerWidth - 10) {
+                left = window.innerWidth - toolbarRect.width - 10;
+            }
+
+            toolbar.style.top = `${top}px`;
+            toolbar.style.left = `${left}px`;
+        }
+
+        // Save current field
+        function ceInlineSaveField() {
+            if (!ceInlineCurrentElement) return;
+
+            const fieldName = ceInlineCurrentElement.getAttribute('data-inline-edit');
+            const newValue = ceInlineCurrentElement.textContent.trim();
+
+            // Update the settings form input
+            const settingInput = document.getElementById('ce-setting-' + fieldName);
+            if (settingInput) {
+                settingInput.value = newValue;
+            }
+
+            // Track the change
+            ceInlineUnsavedChanges[fieldName] = newValue;
+
+            // Clean up editing state
+            ceInlineCurrentElement.classList.remove('ce-inline-editing');
+            ceInlineCurrentElement.contentEditable = 'false';
+            ceInlineCurrentElement.removeEventListener('keydown', ceInlineHandleKeydown);
+            ceInlineCurrentElement.removeEventListener('blur', ceInlineHandleBlur);
+
+            document.getElementById('ce-inline-toolbar').classList.remove('active');
+
+            // Show unsaved indicator
+            ceInlineShowUnsavedIndicator();
+
+            ceShowToast(`${ceInlineFieldLabels[fieldName] || fieldName} updated`, 'success');
+            ceInlineCurrentElement = null;
+        }
+
+        // Cancel current edit
+        function ceInlineCancelEdit() {
+            if (!ceInlineCurrentElement) return;
+
+            ceInlineCurrentElement.textContent = ceInlineOriginalContent;
+            ceInlineCurrentElement.classList.remove('ce-inline-editing');
+            ceInlineCurrentElement.contentEditable = 'false';
+            ceInlineCurrentElement.removeEventListener('keydown', ceInlineHandleKeydown);
+            ceInlineCurrentElement.removeEventListener('blur', ceInlineHandleBlur);
+
+            document.getElementById('ce-inline-toolbar').classList.remove('active');
+            ceInlineCurrentElement = null;
+        }
+
+        // Format commands
+        function ceInlineFormatBold() {
+            document.execCommand('bold', false, null);
+        }
+
+        function ceInlineFormatItalic() {
+            document.execCommand('italic', false, null);
+        }
+
+        // Link popup handling
+        function ceInlineOpenLinkPopup(el) {
+            ceInlineLinkElement = el;
+            const popup = document.getElementById('ce-inline-link-popup');
+            const input = document.getElementById('ce-inline-link-input');
+
+            const fieldName = el.getAttribute('data-inline-edit');
+            let currentValue = '';
+
+            if (fieldName === 'contactEmail') {
+                currentValue = el.textContent.trim();
+                input.type = 'email';
+                input.placeholder = 'Enter email address...';
+            } else {
+                currentValue = el.getAttribute('href') || '';
+                input.type = 'url';
+                input.placeholder = 'Enter URL...';
+            }
+
+            input.value = currentValue.replace('mailto:', '');
+
+            // Position popup
+            const rect = el.getBoundingClientRect();
+            popup.style.top = `${rect.bottom + 8}px`;
+            popup.style.left = `${Math.max(10, rect.left)}px`;
+
+            popup.classList.add('active');
+            input.focus();
+            input.select();
+        }
+
+        function ceInlineCloseLinkPopup() {
+            document.getElementById('ce-inline-link-popup').classList.remove('active');
+            ceInlineLinkElement = null;
+        }
+
+        function ceInlineSaveLinkEdit() {
+            if (!ceInlineLinkElement) return;
+
+            const input = document.getElementById('ce-inline-link-input');
+            const fieldName = ceInlineLinkElement.getAttribute('data-inline-edit');
+            const newValue = input.value.trim();
+
+            if (fieldName === 'contactEmail') {
+                ceInlineLinkElement.textContent = newValue;
+                ceInlineLinkElement.href = 'mailto:' + newValue;
+            } else {
+                ceInlineLinkElement.href = newValue;
+            }
+
+            // Update settings form
+            const settingInput = document.getElementById('ce-setting-' + fieldName);
+            if (settingInput) {
+                settingInput.value = newValue;
+            }
+
+            ceInlineUnsavedChanges[fieldName] = newValue;
+            ceInlineCloseLinkPopup();
+            ceInlineShowUnsavedIndicator();
+            ceShowToast(`${ceInlineFieldLabels[fieldName] || fieldName} updated`, 'success');
+        }
+
+        // Button editor (handles both text and URL)
+        function ceInlineOpenButtonEditor(el) {
+            const fieldName = el.getAttribute('data-inline-edit');
+
+            // For buttons, we'll open a small popup for both text and URL
+            const currentText = el.textContent.trim();
+            const currentUrl = el.getAttribute('href') || '';
+
+            // Create a temporary popup for button editing
+            const popup = document.getElementById('ce-inline-link-popup');
+            const existingInput = document.getElementById('ce-inline-link-input');
+
+            // Replace with dual inputs temporarily
+            popup.innerHTML = `
+                <div style="margin-bottom: 8px;">
+                    <label style="font-size: 11px; color: var(--gray-500); display: block; margin-bottom: 4px;">Button Text</label>
+                    <input type="text" id="ce-inline-btn-text" value="${escapeHtml(currentText)}" style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-200); border-radius: 4px; font-size: 13px;">
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <label style="font-size: 11px; color: var(--gray-500); display: block; margin-bottom: 4px;">Button URL</label>
+                    <input type="url" id="ce-inline-btn-url" value="${escapeHtml(currentUrl)}" placeholder="https://..." style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-200); border-radius: 4px; font-size: 13px;">
+                </div>
+                <div class="ce-inline-link-popup-actions">
+                    <button class="ce-inline-toolbar-btn" onclick="ceInlineCloseButtonEditor()">Cancel</button>
+                    <button class="ce-inline-toolbar-btn primary" onclick="ceInlineSaveButtonEdit()">Save</button>
+                </div>
+            `;
+
+            ceInlineLinkElement = el;
+
+            // Position popup
+            const rect = el.getBoundingClientRect();
+            popup.style.top = `${rect.bottom + 8}px`;
+            popup.style.left = `${Math.max(10, rect.left)}px`;
+
+            popup.classList.add('active');
+            document.getElementById('ce-inline-btn-text').focus();
+        }
+
+        function ceInlineCloseButtonEditor() {
+            // Restore original link popup HTML
+            const popup = document.getElementById('ce-inline-link-popup');
+            popup.innerHTML = `
+                <input type="url" id="ce-inline-link-input" placeholder="Enter URL...">
+                <div class="ce-inline-link-popup-actions">
+                    <button class="ce-inline-toolbar-btn" onclick="ceInlineCloseLinkPopup()">Cancel</button>
+                    <button class="ce-inline-toolbar-btn primary" onclick="ceInlineSaveLinkEdit()">Save</button>
+                </div>
+            `;
+            popup.classList.remove('active');
+            ceInlineLinkElement = null;
+        }
+
+        function ceInlineSaveButtonEdit() {
+            if (!ceInlineLinkElement) return;
+
+            const newText = document.getElementById('ce-inline-btn-text').value.trim();
+            const newUrl = document.getElementById('ce-inline-btn-url').value.trim();
+            const fieldName = ceInlineLinkElement.getAttribute('data-inline-edit');
+
+            ceInlineLinkElement.textContent = newText;
+            ceInlineLinkElement.href = newUrl;
+
+            // Update settings form - buttons have Text and Url suffixes
+            const textInput = document.getElementById('ce-setting-' + fieldName + 'Text');
+            const urlInput = document.getElementById('ce-setting-' + fieldName + 'Url');
+
+            if (textInput) textInput.value = newText;
+            if (urlInput) urlInput.value = newUrl;
+
+            ceInlineUnsavedChanges[fieldName + 'Text'] = newText;
+            ceInlineUnsavedChanges[fieldName + 'Url'] = newUrl;
+
+            ceInlineCloseButtonEditor();
+            ceInlineShowUnsavedIndicator();
+            ceShowToast('Button updated', 'success');
+        }
+
+        // Show/hide unsaved changes indicator
+        function ceInlineShowUnsavedIndicator() {
+            const count = Object.keys(ceInlineUnsavedChanges).length;
+            const indicator = document.getElementById('ce-inline-unsaved-indicator');
+
+            if (count > 0) {
+                indicator.querySelector('span').textContent = `${count} unsaved change${count > 1 ? 's' : ''}`;
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        }
+
+        // Save all inline changes
+        async function ceInlineSaveAllChanges() {
+            if (Object.keys(ceInlineUnsavedChanges).length === 0) return;
+
+            // All changes have been synced to the form inputs already
+            // Just trigger the save settings function
+            await ceSaveSettings();
+
+            ceInlineUnsavedChanges = {};
+            document.getElementById('ce-inline-unsaved-indicator').classList.remove('active');
+            ceShowToast('All changes saved!', 'success');
+        }
+
+        // Discard all inline changes
+        function ceInlineDiscardChanges() {
+            if (!confirm('Discard all unsaved changes?')) return;
+
+            ceInlineUnsavedChanges = {};
+            document.getElementById('ce-inline-unsaved-indicator').classList.remove('active');
+
+            // Reload settings and re-render preview to restore original values
+            ceLoadSettings();
+            ceRenderPreview();
+
+            ceShowToast('Changes discarded', 'info');
+        }
+
+        // Close popups when clicking outside
+        document.addEventListener('click', (e) => {
+            const linkPopup = document.getElementById('ce-inline-link-popup');
+            if (linkPopup && linkPopup.classList.contains('active')) {
+                if (!linkPopup.contains(e.target) && !e.target.hasAttribute('data-inline-edit')) {
+                    ceInlineCloseLinkPopup();
+                }
+            }
+        });
+
         function ceRenderPreview(useLiveFormValues = false) {
             const container = document.getElementById('ce-preview-content');
             // Use form values for live preview, DB.getSiteData() for saved state from API
@@ -7735,24 +8382,24 @@
 
             container.innerHTML = `
                 <!-- Header/Navigation -->
-                <header class="preview-header" data-block-id="header">
-                    <a href="#" class="logo">${escapeHtml(siteData.siteName || 'Stand With Tennessee')}</a>
+                <header class="preview-header" data-block-id="header" data-section-name="Header">
+                    <a href="#" class="logo" data-inline-edit="siteName" data-inline-type="text">${escapeHtml(siteData.siteName || 'Stand With Tennessee')}</a>
                     <nav class="nav">
                         <a href="#mutualaid">Mutual Aid</a>
                         <a href="#crowdfunding">Crowdfunding</a>
                         <a href="#orgs">Organizations</a>
                         <a href="#secure-messaging">Connect</a>
-                        <a href="${escapeHtml(siteData.donateUrl || '#')}" class="public-btn">Donate</a>
+                        <a href="${escapeHtml(siteData.donateUrl || '#')}" class="public-btn" data-inline-edit="donateUrl" data-inline-type="link">Donate</a>
                     </nav>
                 </header>
 
                 <!-- Hero Section -->
-                <section class="section section-hero" data-block-id="hero" style="padding-top: 80px;">
+                <section class="section section-hero" data-block-id="hero" data-section-name="Hero" style="padding-top: 80px;">
                     <div class="content-wrapper">
-                        <h1>${escapeHtml(siteData.heroTitle || 'Tennessee is under occupation...')}</h1>
-                        <p>${escapeHtml(siteData.heroDescription || 'Site description...')}</p>
+                        <h1 data-inline-edit="heroTitle" data-inline-type="text">${escapeHtml(siteData.heroTitle || 'Tennessee is under occupation...')}</h1>
+                        <p data-inline-edit="heroDescription" data-inline-type="text">${escapeHtml(siteData.heroDescription || 'Site description...')}</p>
                         <div class="button-group">
-                            <a href="${escapeHtml(siteData.featuredButton1Url || '#')}" class="public-btn">${escapeHtml(siteData.featuredButton1Text || 'Featured GoFundMe')}</a>
+                            <a href="${escapeHtml(siteData.featuredButton1Url || '#')}" class="public-btn" data-inline-edit="featuredButton1" data-inline-type="button" data-inline-text="${escapeHtml(siteData.featuredButton1Text || 'Featured GoFundMe')}" data-inline-url="${escapeHtml(siteData.featuredButton1Url || '#')}">${escapeHtml(siteData.featuredButton1Text || 'Featured GoFundMe')}</a>
                             <a href="#mutualaid" class="public-btn">Mutual Aid</a>
                             <a href="#orgs" class="public-btn">Organizations</a>
                         </div>
@@ -7760,10 +8407,10 @@
                 </section>
 
                 <!-- Mutual Aid Section -->
-                <section class="section section-dark" data-block-id="mutualaid">
+                <section class="section section-dark" data-block-id="mutualaid" data-section-name="Mutual Aid">
                     <div class="content-wrapper">
-                        <h2>${escapeHtml(siteData.mutualAidTitle || 'Mutual Aid & Materials')}</h2>
-                        <p>${escapeHtml(siteData.mutualAidDescription || '')}</p>
+                        <h2 data-inline-edit="mutualAidTitle" data-inline-type="text">${escapeHtml(siteData.mutualAidTitle || 'Mutual Aid & Materials')}</h2>
+                        <p data-inline-edit="mutualAidDescription" data-inline-type="text">${escapeHtml(siteData.mutualAidDescription || '')}</p>
                         <div class="accordion">
                             ${mutualAidOrgs.length > 0 ? `
                                 <div class="accordion-item">
@@ -7785,10 +8432,10 @@
                 </section>
 
                 <!-- Crowdfunding Section -->
-                <section class="section section-light" data-block-id="crowdfunding">
+                <section class="section section-light" data-block-id="crowdfunding" data-section-name="Crowdfunding">
                     <div class="content-wrapper">
-                        <h2>${escapeHtml(siteData.crowdfundingTitle || 'Crowdfunding Campaigns')}</h2>
-                        <p>${escapeHtml(siteData.crowdfundingDescription || '')}</p>
+                        <h2 data-inline-edit="crowdfundingTitle" data-inline-type="text">${escapeHtml(siteData.crowdfundingTitle || 'Crowdfunding Campaigns')}</h2>
+                        <p data-inline-edit="crowdfundingDescription" data-inline-type="text">${escapeHtml(siteData.crowdfundingDescription || '')}</p>
                         <div class="accordion">
                             ${Object.entries(campaignsByType).map(([type, camps]) => `
                                 <div class="accordion-item">
@@ -7810,10 +8457,10 @@
                 </section>
 
                 <!-- Organizations Section -->
-                <section class="section" data-block-id="orgs">
+                <section class="section" data-block-id="orgs" data-section-name="Organizations">
                     <div class="content-wrapper">
-                        <h2>${escapeHtml(siteData.orgsTitle || 'Organizations On The Ground')}</h2>
-                        <p>${escapeHtml(siteData.orgsDescription || '')}</p>
+                        <h2 data-inline-edit="orgsTitle" data-inline-type="text">${escapeHtml(siteData.orgsTitle || 'Organizations On The Ground')}</h2>
+                        <p data-inline-edit="orgsDescription" data-inline-type="text">${escapeHtml(siteData.orgsDescription || '')}</p>
                         <div class="accordion">
                             ${Object.entries(orgsByType).map(([type, orgList]) => `
                                 <div class="accordion-item">
@@ -7835,26 +8482,34 @@
                 </section>
 
                 <!-- Secure Messaging Section -->
-                <section class="section section-dark" data-block-id="secure-messaging" style="text-align: center;">
+                <section class="section section-dark" data-block-id="secure-messaging" data-section-name="Secure Messaging" style="text-align: center;">
                     <div class="content-wrapper">
-                        <h2>${escapeHtml(siteData.secureMessagingTitle || 'Stay Connected Securely')}</h2>
-                        <p style="margin: 0 auto;">${escapeHtml(siteData.secureMessagingDescription || '')}</p>
+                        <h2 data-inline-edit="secureMessagingTitle" data-inline-type="text">${escapeHtml(siteData.secureMessagingTitle || 'Stay Connected Securely')}</h2>
+                        <p style="margin: 0 auto;" data-inline-edit="secureMessagingDescription" data-inline-type="text">${escapeHtml(siteData.secureMessagingDescription || '')}</p>
                     </div>
                 </section>
 
                 <!-- Footer -->
-                <footer style="background: var(--footer-bg); color: var(--footer-text); padding: var(--footer-padding); text-align: center;">
-                    <p>Contact: <a href="mailto:${escapeHtml(siteData.contactEmail || '')}" style="color: inherit;">${escapeHtml(siteData.contactEmail || 'contact@example.org')}</a></p>
+                <footer data-block-id="footer" data-section-name="Footer" style="background: var(--footer-bg); color: var(--footer-text); padding: var(--footer-padding); text-align: center;">
+                    <p>Contact: <a href="mailto:${escapeHtml(siteData.contactEmail || '')}" style="color: inherit;" data-inline-edit="contactEmail" data-inline-type="email">${escapeHtml(siteData.contactEmail || 'contact@example.org')}</a></p>
                 </footer>
             `;
 
-            // Add click handlers for preview blocks
+            // Enable inline mode class
+            container.classList.add('ce-inline-mode');
+
+            // Add click handlers for preview blocks (section selection)
             container.querySelectorAll('[data-block-id]').forEach(block => {
-                block.addEventListener('click', () => {
+                block.addEventListener('click', (e) => {
+                    // Don't select block if clicking on editable element
+                    if (e.target.hasAttribute('data-inline-edit')) return;
                     container.querySelectorAll('[data-block-id]').forEach(b => b.classList.remove('selected'));
                     block.classList.add('selected');
                 });
             });
+
+            // Add click handlers for inline editable elements
+            ceInitInlineEditing(container);
         }
 
         // Toast Notification
