@@ -4776,6 +4776,10 @@
             },
 
             // Ingest endpoint for event-sourced content
+            // Schema: { id, created_at, agent, uuid, payload, operator, target, set }
+            // - set: the frame/context (organizations, campaigns, snapshots, etc.)
+            // - target: what's being acted upon (record_id for activities, frame name for snapshots)
+            // - operator: INS, ALT, NUL for activities; INS for snapshots
             async ingestContent(event) {
                 try {
                     const res = await fetch(`${this.baseUrl}/ingest_swt_content`, {
@@ -4784,7 +4788,8 @@
                         body: JSON.stringify({
                             uuid: event.id,
                             agent: event.actor || 'admin',
-                            target: 'swtContent',
+                            target: event.record_id,
+                            set: event.frame,
                             payload: {
                                 data: {
                                     [event.operator]: event.payload
@@ -4802,6 +4807,37 @@
                     return await res.json();
                 } catch (err) {
                     console.error('ContentAPI.ingestContent error:', err);
+                    throw err;
+                }
+            },
+
+            // Save a snapshot - creates an INS record in the "snapshots" set
+            // Snapshots represent the computed current state for fast hydration on load
+            async saveSnapshot(frame, state, actor = 'system') {
+                try {
+                    const snapshotId = `snap_${frame}_${Date.now()}`;
+                    const res = await fetch(`${this.baseUrl}/ingest_swt_content`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            uuid: snapshotId,
+                            agent: actor,
+                            target: frame,  // What this snapshot represents (e.g., "organizations")
+                            set: 'snapshots',
+                            payload: {
+                                data: state,  // The full computed state
+                                frame: frame,
+                                record_count: Array.isArray(state) ? state.length : 1,
+                                computed_at: new Date().toISOString()
+                            },
+                            operator: 'INS',
+                            created_at: new Date().toISOString()
+                        })
+                    });
+                    if (!res.ok) throw new Error('Failed to save snapshot');
+                    return await res.json();
+                } catch (err) {
+                    console.error('ContentAPI.saveSnapshot error:', err);
                     throw err;
                 }
             },
