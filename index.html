@@ -8811,14 +8811,6 @@
             return ` <span style="display: inline-block; background: ${color.bg}; color: ${color.text}; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; margin-left: 4px; vertical-align: middle;">${status.toUpperCase()}</span>`;
         }
 
-        // Close preview modal with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.getElementById('preview-modal').classList.contains('active')) {
-                closePreviewModal();
-                e.stopPropagation();
-            }
-        });
-
         // Delete record - Uses localStorage
         function deleteRecord(frame, recordId) {
             if (!confirm('Are you sure you want to archive this record?')) return;
@@ -9552,15 +9544,39 @@
             loadAllSections();
         }
 
-        // Update the triple-Escape to enter edit mode instead of login
+        // Unified Escape key handler for triple-Escape to enter edit mode
         let escapeCount = 0;
         let escapeTimer = null;
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                // Handle link popup close
-                if (document.getElementById('link-edit-popup').classList.contains('active')) {
+                // Handle preview modal close (takes priority, doesn't count toward triple-escape)
+                const previewModal = document.getElementById('preview-modal');
+                if (previewModal && previewModal.classList.contains('active')) {
+                    closePreviewModal();
+                    return;
+                }
+
+                // Handle link popup close (takes priority, doesn't count toward triple-escape)
+                const linkPopup = document.getElementById('link-edit-popup');
+                if (linkPopup && linkPopup.classList.contains('active')) {
                     closeLinkPopup();
+                    return;
+                }
+
+                // Handle login modal close (if open, close it instead of counting)
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal && loginModal.classList.contains('active')) {
+                    document.getElementById('loginBackdrop').classList.remove('active');
+                    loginModal.classList.remove('active');
+                    escapeCount = 0;
+                    return;
+                }
+
+                // Handle mobile nav close (if open, close it instead of counting)
+                const mobileNav = document.getElementById('mobile-nav');
+                if (mobileNav && mobileNav.classList.contains('active')) {
+                    // Let the mobile nav's own handler close it, but don't count this escape
                     return;
                 }
 
@@ -9572,10 +9588,13 @@
                 if (escapeCount >= 3) {
                     escapeCount = 0;
                     if (!isEditMode) {
-                        // Show login first
-                        document.getElementById('loginBackdrop').classList.add('active');
-                        document.getElementById('loginModal').classList.add('active');
-                        document.getElementById('passwordInput').focus();
+                        // Show login modal
+                        const backdrop = document.getElementById('loginBackdrop');
+                        const modal = document.getElementById('loginModal');
+                        const passwordInput = document.getElementById('passwordInput');
+                        if (backdrop) backdrop.classList.add('active');
+                        if (modal) modal.classList.add('active');
+                        if (passwordInput) passwordInput.focus();
                     } else {
                         exitEditMode();
                     }
