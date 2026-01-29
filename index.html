@@ -1548,7 +1548,522 @@
             display: block;
         }
 
-        /* Content Type Cards */
+        /* ============================================
+           LISTS & RECORDS SYSTEM
+           ============================================ */
+
+        /* Content Tab Layout - Two Panel */
+        .lr-content-layout {
+            display: flex;
+            gap: 0;
+            height: 100%;
+            min-height: 400px;
+        }
+
+        /* Lists Sidebar */
+        .lr-lists-sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            border-right: 1px solid var(--gray-200);
+            background: var(--gray-50);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lr-lists-header {
+            padding: 12px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .lr-lists-header h4 {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+            margin: 0;
+        }
+
+        .lr-lists-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .lr-list-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            margin-bottom: 2px;
+        }
+
+        .lr-list-item:hover {
+            background: white;
+        }
+
+        .lr-list-item.active {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .lr-list-icon {
+            font-size: 16px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .lr-list-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .lr-list-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-800);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lr-list-count {
+            font-size: 12px;
+            color: var(--gray-500);
+            background: var(--gray-200);
+            padding: 2px 8px;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .lr-list-item.active .lr-list-count {
+            background: var(--orange);
+            color: white;
+        }
+
+        /* Records Panel */
+        .lr-records-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            background: white;
+        }
+
+        .lr-records-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .lr-records-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lr-records-title h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .lr-records-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lr-search-input {
+            padding: 6px 10px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            font-size: 13px;
+            width: 160px;
+        }
+
+        .lr-view-toggle {
+            display: flex;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .lr-view-btn {
+            padding: 6px 10px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--gray-600);
+            transition: all 0.15s;
+        }
+
+        .lr-view-btn:not(:last-child) {
+            border-right: 1px solid var(--gray-300);
+        }
+
+        .lr-view-btn:hover {
+            background: var(--gray-50);
+        }
+
+        .lr-view-btn.active {
+            background: var(--orange);
+            color: white;
+        }
+
+        /* Records Content Area */
+        .lr-records-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        /* Cards View */
+        .lr-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+        }
+
+        .lr-record-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .lr-record-card:hover {
+            border-color: var(--orange);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .lr-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .lr-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .lr-card-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            flex-shrink: 0;
+        }
+
+        .lr-card-badge.status-verified,
+        .lr-card-badge.status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .lr-card-badge.status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .lr-card-badge.status-draft {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .lr-card-description {
+            font-size: 12px;
+            color: var(--gray-600);
+            line-height: 1.4;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .lr-card-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        .lr-card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* List View */
+        .lr-list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .lr-record-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: white;
+        }
+
+        .lr-record-row:hover {
+            border-color: var(--orange);
+            background: var(--gray-50);
+        }
+
+        .lr-row-title {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-800);
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lr-row-meta {
+            font-size: 12px;
+            color: var(--gray-500);
+            flex-shrink: 0;
+        }
+
+        /* Table View */
+        .lr-table-view {
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .lr-data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .lr-data-table th,
+        .lr-data-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 13px;
+        }
+
+        .lr-data-table th {
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-600);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .lr-data-table tr {
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .lr-data-table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .lr-data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Empty State */
+        .lr-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 24px;
+            text-align: center;
+        }
+
+        .lr-empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .lr-empty-state h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin: 0 0 8px 0;
+        }
+
+        .lr-empty-state p {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin: 0 0 16px 0;
+        }
+
+        /* Record Detail Modal */
+        .lr-detail-modal {
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .lr-detail-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .lr-detail-title-area {
+            flex: 1;
+        }
+
+        .lr-detail-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+            color: var(--gray-800);
+        }
+
+        .lr-detail-subtitle {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .lr-detail-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-400);
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .lr-detail-close:hover {
+            color: var(--gray-600);
+        }
+
+        .lr-detail-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .lr-detail-section {
+            margin-bottom: 20px;
+        }
+
+        .lr-detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .lr-detail-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-500);
+            margin-bottom: 4px;
+        }
+
+        .lr-detail-value {
+            font-size: 14px;
+            color: var(--gray-800);
+            line-height: 1.5;
+        }
+
+        .lr-detail-value a {
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        .lr-detail-value a:hover {
+            text-decoration: underline;
+        }
+
+        .lr-detail-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .lr-detail-footer-left {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Display Config Section in Lists */
+        .lr-display-config {
+            padding: 12px;
+            border-top: 1px solid var(--gray-200);
+            background: white;
+        }
+
+        .lr-display-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-400);
+            margin-bottom: 8px;
+        }
+
+        .lr-display-options {
+            display: flex;
+            gap: 4px;
+        }
+
+        .lr-display-option {
+            padding: 4px 8px;
+            font-size: 11px;
+            border: 1px solid var(--gray-200);
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            color: var(--gray-600);
+        }
+
+        .lr-display-option:hover {
+            border-color: var(--gray-300);
+        }
+
+        .lr-display-option.active {
+            background: var(--orange);
+            border-color: var(--orange);
+            color: white;
+        }
+
+        /* Legacy support - keep old classes working */
         .ce-content-type-list {
             display: flex;
             flex-direction: column;
@@ -5191,14 +5706,50 @@
                 </div>
 
                 <div class="ce-cms-content">
-                    <!-- Content Tab -->
+                    <!-- Content Tab - Lists & Records -->
                     <div id="ce-tab-content" class="ce-cms-section active">
-                        <div class="ce-content-type-list" id="ce-content-types">
-                            <!-- Content types rendered here -->
-                        </div>
+                        <div class="lr-content-layout">
+                            <!-- Lists Sidebar -->
+                            <div class="lr-lists-sidebar">
+                                <div class="lr-lists-header">
+                                    <h4>Lists</h4>
+                                </div>
+                                <div class="lr-lists-nav" id="lr-lists-nav">
+                                    <!-- Lists rendered by JS -->
+                                </div>
+                                <div class="lr-display-config" id="lr-display-config" style="display: none;">
+                                    <div class="lr-display-label">Public Display</div>
+                                    <div class="lr-display-options" id="lr-display-options">
+                                        <!-- Display options rendered by JS -->
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div id="ce-content-table-area">
-                            <!-- Selected content type table rendered here -->
+                            <!-- Records Panel -->
+                            <div class="lr-records-panel">
+                                <div class="lr-records-header" id="lr-records-header" style="display: none;">
+                                    <div class="lr-records-title">
+                                        <h3 id="lr-records-list-name">Select a List</h3>
+                                    </div>
+                                    <div class="lr-records-actions">
+                                        <input type="text" class="lr-search-input" id="lr-search-input" placeholder="Search..." oninput="lrFilterRecords()">
+                                        <div class="lr-view-toggle">
+                                            <button class="lr-view-btn active" data-view="cards" onclick="lrSetView('cards')" title="Cards">▦</button>
+                                            <button class="lr-view-btn" data-view="list" onclick="lrSetView('list')" title="List">☰</button>
+                                            <button class="lr-view-btn" data-view="table" onclick="lrSetView('table')" title="Table">▤</button>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm" id="lr-add-record-btn" onclick="lrOpenAddModal()">+ Add</button>
+                                    </div>
+                                </div>
+                                <div class="lr-records-content" id="lr-records-content">
+                                    <!-- Welcome state -->
+                                    <div class="lr-empty-state" id="lr-welcome-state">
+                                        <div class="lr-empty-icon">📋</div>
+                                        <h3>Content Lists</h3>
+                                        <p>Select a list from the sidebar to view and manage records.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -5895,6 +6446,28 @@
                 <button class="btn btn-secondary" onclick="ceCloseEditModal()">Cancel</button>
                 <button class="btn btn-danger" id="ce-delete-btn" style="display: none;" onclick="ceDeleteCurrentItem()">Delete</button>
                 <button class="btn btn-primary" onclick="ceSaveEditModal()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record Detail Modal -->
+    <div class="ce-modal-backdrop" id="lr-detail-modal">
+        <div class="ce-modal lr-detail-modal">
+            <div class="lr-detail-header">
+                <div class="lr-detail-title-area">
+                    <h2 class="lr-detail-title" id="lr-detail-title">Record Title</h2>
+                    <div class="lr-detail-subtitle" id="lr-detail-subtitle">List Name</div>
+                </div>
+                <button class="lr-detail-close" onclick="lrCloseDetailModal()">&times;</button>
+            </div>
+            <div class="lr-detail-body" id="lr-detail-body">
+                <!-- Record details rendered by JS -->
+            </div>
+            <div class="lr-detail-footer">
+                <div class="lr-detail-footer-left">
+                    <button class="btn btn-danger btn-sm" onclick="lrDeleteRecord()">Delete</button>
+                </div>
+                <button class="btn btn-primary" onclick="lrEditRecord()">Edit Record</button>
             </div>
         </div>
     </div>
@@ -8946,6 +9519,435 @@
             }
         };
 
+        // ============================================
+        // LISTS & RECORDS SYSTEM
+        // ============================================
+
+        // Lists & Records State
+        let lrSelectedList = null;
+        let lrSelectedRecord = null;
+        let lrCurrentView = 'cards'; // 'cards', 'list', 'table'
+        let lrSearchQuery = '';
+
+        // Lists Configuration - extends ceContentTypes with display options
+        const lrListsConfig = {
+            organizations: {
+                ...ceContentTypes.organizations,
+                displayStyle: 'accordion',
+                groupBy: 'organization_type',
+                cardFields: ['name', 'description', 'website'],
+                titleField: 'name',
+                descriptionField: 'description',
+                statusField: 'status',
+                typeField: 'organization_type'
+            },
+            campaigns: {
+                ...ceContentTypes.campaigns,
+                displayStyle: 'cards',
+                groupBy: 'campaign_type',
+                cardFields: ['title', 'description', 'platform', 'goal_amount'],
+                titleField: 'title',
+                descriptionField: 'description',
+                statusField: 'status',
+                typeField: 'campaign_type'
+            },
+            services: {
+                ...ceContentTypes.services,
+                displayStyle: 'list',
+                groupBy: null,
+                cardFields: ['name', 'description'],
+                titleField: 'name',
+                descriptionField: 'description',
+                statusField: null,
+                typeField: null
+            },
+            regions: {
+                ...ceContentTypes.regions,
+                displayStyle: 'list',
+                groupBy: 'type',
+                cardFields: ['name', 'counties'],
+                titleField: 'name',
+                descriptionField: 'counties',
+                statusField: null,
+                typeField: 'type'
+            },
+            languages: {
+                ...ceContentTypes.languages,
+                displayStyle: 'table',
+                groupBy: null,
+                cardFields: ['name', 'native_name', 'code'],
+                titleField: 'name',
+                descriptionField: 'native_name',
+                statusField: null,
+                typeField: null
+            },
+            sections: {
+                ...ceContentTypes.sections,
+                displayStyle: 'list',
+                groupBy: 'section_type',
+                cardFields: ['name', 'section_type', 'order'],
+                titleField: 'name',
+                descriptionField: 'section_type',
+                statusField: 'is_published',
+                typeField: 'section_type'
+            },
+            blocks: {
+                ...ceContentTypes.blocks,
+                displayStyle: 'list',
+                groupBy: 'block_type',
+                cardFields: ['title', 'block_type', 'content'],
+                titleField: 'title',
+                descriptionField: 'content',
+                statusField: null,
+                typeField: 'block_type'
+            },
+            nav_items: {
+                ...ceContentTypes.nav_items,
+                displayStyle: 'list',
+                groupBy: 'link_type',
+                cardFields: ['title', 'url', 'link_type'],
+                titleField: 'title',
+                descriptionField: 'url',
+                statusField: 'visible',
+                typeField: 'link_type'
+            },
+            secure_links: {
+                ...ceContentTypes.secure_links,
+                displayStyle: 'cards',
+                groupBy: null,
+                cardFields: ['name', 'replaces_name', 'description'],
+                titleField: 'name',
+                descriptionField: 'description',
+                statusField: 'status',
+                typeField: null
+            },
+            secure_features: {
+                ...ceContentTypes.secure_features,
+                displayStyle: 'cards',
+                groupBy: null,
+                cardFields: ['title', 'icon', 'description'],
+                titleField: 'title',
+                descriptionField: 'description',
+                statusField: 'status',
+                typeField: null
+            },
+            theme_presets: {
+                ...ceContentTypes.theme_presets,
+                displayStyle: 'cards',
+                groupBy: null,
+                cardFields: ['name', 'description'],
+                titleField: 'name',
+                descriptionField: 'description',
+                statusField: 'status',
+                typeField: null
+            }
+        };
+
+        // Render Lists Sidebar
+        function lrRenderLists() {
+            const container = document.getElementById('lr-lists-nav');
+            if (!container) return;
+
+            container.innerHTML = Object.entries(lrListsConfig).map(([key, list]) => {
+                const count = DB.getAllCurrentStates(key).length;
+                return `
+                    <div class="lr-list-item ${lrSelectedList === key ? 'active' : ''}"
+                         onclick="lrSelectList('${key}')">
+                        <span class="lr-list-icon">${list.icon}</span>
+                        <div class="lr-list-info">
+                            <div class="lr-list-name">${list.name}</div>
+                        </div>
+                        <span class="lr-list-count">${count}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Select a List
+        function lrSelectList(listKey) {
+            lrSelectedList = listKey;
+            lrSelectedRecord = null;
+            lrSearchQuery = '';
+
+            // Update sidebar
+            lrRenderLists();
+
+            // Show records header
+            document.getElementById('lr-records-header').style.display = 'flex';
+            document.getElementById('lr-records-list-name').textContent = lrListsConfig[listKey].name;
+            document.getElementById('lr-search-input').value = '';
+
+            // Show display config
+            lrRenderDisplayConfig(listKey);
+
+            // Render records
+            lrRenderRecords();
+
+            // Also update legacy ceSelectedContentType for compatibility
+            ceSelectedContentType = listKey;
+        }
+
+        // Render Display Config Options
+        function lrRenderDisplayConfig(listKey) {
+            const config = lrListsConfig[listKey];
+            const container = document.getElementById('lr-display-config');
+            const options = document.getElementById('lr-display-options');
+
+            container.style.display = 'block';
+
+            const displayStyles = [
+                { value: 'accordion', label: 'Accordion' },
+                { value: 'cards', label: 'Cards' },
+                { value: 'list', label: 'List' },
+                { value: 'table', label: 'Table' }
+            ];
+
+            options.innerHTML = displayStyles.map(style => `
+                <button class="lr-display-option ${config.displayStyle === style.value ? 'active' : ''}"
+                        onclick="lrSetDisplayStyle('${listKey}', '${style.value}')">
+                    ${style.label}
+                </button>
+            `).join('');
+        }
+
+        // Set Display Style for a List
+        function lrSetDisplayStyle(listKey, style) {
+            lrListsConfig[listKey].displayStyle = style;
+            lrRenderDisplayConfig(listKey);
+            ceRenderPreview(); // Update preview
+        }
+
+        // Set View Mode (cards, list, table)
+        function lrSetView(view) {
+            lrCurrentView = view;
+
+            // Update toggle buttons
+            document.querySelectorAll('.lr-view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+
+            lrRenderRecords();
+        }
+
+        // Filter Records
+        function lrFilterRecords() {
+            lrSearchQuery = document.getElementById('lr-search-input').value.toLowerCase();
+            lrRenderRecords();
+        }
+
+        // Render Records based on current view
+        function lrRenderRecords() {
+            if (!lrSelectedList) return;
+
+            const container = document.getElementById('lr-records-content');
+            const config = lrListsConfig[lrSelectedList];
+            let records = DB.getAllCurrentStates(lrSelectedList);
+
+            // Filter by search query
+            if (lrSearchQuery) {
+                records = records.filter(record => {
+                    const searchableFields = [config.titleField, config.descriptionField, config.typeField].filter(Boolean);
+                    return searchableFields.some(field => {
+                        const value = record[field];
+                        return value && String(value).toLowerCase().includes(lrSearchQuery);
+                    });
+                });
+            }
+
+            if (records.length === 0) {
+                container.innerHTML = `
+                    <div class="lr-empty-state">
+                        <div class="lr-empty-icon">${config.icon}</div>
+                        <h3>${lrSearchQuery ? 'No matches found' : `No ${config.name} yet`}</h3>
+                        <p>${lrSearchQuery ? 'Try a different search term' : `Create your first ${config.name.toLowerCase().replace(/s$/, '')}`}</p>
+                        ${!lrSearchQuery ? `<button class="btn btn-primary" onclick="lrOpenAddModal()">+ Add ${config.name.replace(/s$/, '')}</button>` : ''}
+                    </div>
+                `;
+                return;
+            }
+
+            switch (lrCurrentView) {
+                case 'cards':
+                    container.innerHTML = lrRenderCardsView(records, config);
+                    break;
+                case 'list':
+                    container.innerHTML = lrRenderListView(records, config);
+                    break;
+                case 'table':
+                    container.innerHTML = lrRenderTableView(records, config);
+                    break;
+            }
+        }
+
+        // Render Cards View
+        function lrRenderCardsView(records, config) {
+            return `
+                <div class="lr-cards-grid">
+                    ${records.map(record => {
+                        const title = record[config.titleField] || 'Untitled';
+                        const description = record[config.descriptionField] || '';
+                        const status = config.statusField ? record[config.statusField] : null;
+                        const type = config.typeField ? record[config.typeField] : null;
+
+                        return `
+                            <div class="lr-record-card" onclick="lrOpenDetailModal('${record.id}')">
+                                <div class="lr-card-header">
+                                    <h4 class="lr-card-title">${escapeHtml(title)}</h4>
+                                    ${status !== null ? `<span class="lr-card-badge status-${status}">${status}</span>` : ''}
+                                </div>
+                                ${description ? `<div class="lr-card-description">${escapeHtml(stripHtml(description))}</div>` : ''}
+                                <div class="lr-card-meta">
+                                    ${type ? `<span>${type.replace(/_/g, ' ')}</span>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // Render List View
+        function lrRenderListView(records, config) {
+            return `
+                <div class="lr-list-view">
+                    ${records.map(record => {
+                        const title = record[config.titleField] || 'Untitled';
+                        const type = config.typeField ? record[config.typeField] : null;
+                        const status = config.statusField ? record[config.statusField] : null;
+
+                        return `
+                            <div class="lr-record-row" onclick="lrOpenDetailModal('${record.id}')">
+                                <span class="lr-row-title">${escapeHtml(title)}</span>
+                                ${type ? `<span class="lr-row-meta">${type.replace(/_/g, ' ')}</span>` : ''}
+                                ${status !== null ? `<span class="lr-card-badge status-${status}">${status}</span>` : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // Render Table View
+        function lrRenderTableView(records, config) {
+            const columns = config.tableColumns || [config.titleField, config.typeField, config.statusField].filter(Boolean);
+
+            return `
+                <div class="lr-table-view">
+                    <table class="lr-data-table">
+                        <thead>
+                            <tr>
+                                ${columns.map(col => `<th>${col.replace(/_/g, ' ')}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${records.map(record => `
+                                <tr onclick="lrOpenDetailModal('${record.id}')">
+                                    ${columns.map(col => {
+                                        let value = record[col];
+                                        if (typeof value === 'boolean') value = value ? 'Yes' : 'No';
+                                        if (value && String(value).length > 50) value = String(value).substring(0, 50) + '...';
+                                        return `<td>${escapeHtml(String(value || '-'))}</td>`;
+                                    }).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // Strip HTML tags for display
+        function stripHtml(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText || '';
+        }
+
+        // Open Detail Modal
+        function lrOpenDetailModal(recordId) {
+            if (!lrSelectedList) return;
+
+            lrSelectedRecord = DB.getCurrentState(recordId, lrSelectedList);
+            if (!lrSelectedRecord) return;
+
+            const config = lrListsConfig[lrSelectedList];
+            const title = lrSelectedRecord[config.titleField] || 'Untitled';
+
+            document.getElementById('lr-detail-title').textContent = title;
+            document.getElementById('lr-detail-subtitle').textContent = config.name;
+
+            // Render detail body
+            const body = document.getElementById('lr-detail-body');
+            body.innerHTML = config.fields.map(field => {
+                let value = lrSelectedRecord[field.name];
+
+                // Skip empty values
+                if (value === null || value === undefined || value === '') return '';
+
+                // Format value based on type
+                if (field.type === 'checkbox') {
+                    value = value ? 'Yes' : 'No';
+                } else if (field.type === 'url' && value) {
+                    value = `<a href="${escapeHtml(value)}" target="_blank">${escapeHtml(value)}</a>`;
+                } else if (field.type === 'email' && value) {
+                    value = `<a href="mailto:${escapeHtml(value)}">${escapeHtml(value)}</a>`;
+                } else if (field.type === 'relation' && value) {
+                    const relatedItem = DB.getCurrentState(value, field.relation);
+                    value = relatedItem ? (relatedItem.name || relatedItem.title || value) : value;
+                } else if (field.type === 'richtext') {
+                    // Keep HTML for richtext
+                } else {
+                    value = escapeHtml(String(value));
+                }
+
+                return `
+                    <div class="lr-detail-section">
+                        <div class="lr-detail-label">${field.label}</div>
+                        <div class="lr-detail-value">${value}</div>
+                    </div>
+                `;
+            }).filter(Boolean).join('');
+
+            document.getElementById('lr-detail-modal').classList.add('active');
+        }
+
+        // Close Detail Modal
+        function lrCloseDetailModal() {
+            document.getElementById('lr-detail-modal').classList.remove('active');
+            lrSelectedRecord = null;
+        }
+
+        // Edit Record (from detail modal)
+        function lrEditRecord() {
+            if (!lrSelectedRecord || !lrSelectedList) return;
+            lrCloseDetailModal();
+            ceOpenEditModal(lrSelectedList, lrSelectedRecord.id);
+        }
+
+        // Delete Record (from detail modal)
+        function lrDeleteRecord() {
+            if (!lrSelectedRecord || !lrSelectedList) return;
+
+            if (confirm('Are you sure you want to delete this record?')) {
+                DB.nulRecord(lrSelectedList, lrSelectedRecord.id, 'deleted by user');
+                Webhooks.log('content_delete', {
+                    access_type: 'content',
+                    frame: lrSelectedList,
+                    record_id: lrSelectedRecord.id
+                });
+                lrCloseDetailModal();
+                lrRenderLists();
+                lrRenderRecords();
+                ceRenderPreview();
+            }
+        }
+
+        // Open Add Modal
+        function lrOpenAddModal() {
+            if (!lrSelectedList) return;
+            ceOpenAddModal(lrSelectedList);
+        }
+
         // Content Editor State
         let ceSelectedContentType = null;
         let ceSelectedItem = null;
@@ -8960,6 +9962,10 @@
             document.body.classList.remove('edit-mode');
             document.getElementById('edit-toolbar').classList.remove('active');
 
+            // Initialize Lists & Records
+            lrRenderLists();
+
+            // Legacy support
             ceRenderContentTypes();
             ceLoadSettings();
             ceRenderPreview();
@@ -8982,9 +9988,10 @@
             document.getElementById('ce-tab-' + tabId).classList.add('active');
         }
 
-        // Content Types Rendering
+        // Content Types Rendering (Legacy - kept for compatibility)
         function ceRenderContentTypes() {
             const container = document.getElementById('ce-content-types');
+            if (!container) return; // New Lists & Records UI doesn't use this container
             container.innerHTML = Object.entries(ceContentTypes).map(([key, type]) => {
                 const count = DB.getAllCurrentStates(key).length;
                 return `
@@ -9010,6 +10017,7 @@
             const type = ceContentTypes[typeKey];
             const items = DB.getAllCurrentStates(typeKey);
             const container = document.getElementById('ce-content-table-area');
+            if (!container) return; // New Lists & Records UI doesn't use this container
 
             if (items.length === 0) {
                 container.innerHTML = `
@@ -9430,6 +10438,12 @@
             ceRenderContentTypes();
             ceRenderContentTable(ceSelectedContentType);
             ceRenderPreview();
+
+            // Update Lists & Records view
+            lrRenderLists();
+            if (lrSelectedList === ceSelectedContentType) {
+                lrRenderRecords();
+            }
         }
 
         function ceDeleteCurrentItem() {
@@ -9448,6 +10462,12 @@
                 ceRenderContentTypes();
                 ceRenderContentTable(ceSelectedContentType);
                 ceRenderPreview();
+
+                // Update Lists & Records view
+                lrRenderLists();
+                if (lrSelectedList === ceSelectedContentType) {
+                    lrRenderRecords();
+                }
             }
         }
 
@@ -9464,6 +10484,12 @@
                 ceRenderContentTypes();
                 ceRenderContentTable(typeKey);
                 ceRenderPreview();
+
+                // Update Lists & Records view
+                lrRenderLists();
+                if (lrSelectedList === typeKey) {
+                    lrRenderRecords();
+                }
             }
         }
 
